@@ -2,11 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class Enemies : MonoBehaviour
+public class Enemies : MonoBehaviour
 {
     public int health = 10;
 
-    public float moveSpeed = 0.2f;
+    public float moveSpeed = 1f;
 
     public int minValue = 1;
     public int maxValue = 2;
@@ -17,6 +17,12 @@ public abstract class Enemies : MonoBehaviour
     public Transform UpRaycast, DownRaycast, RightRaycast, LeftRaycast, movePoint;
 
     private GameObject player;
+
+    private void Awake()
+    {
+        movePoint.parent = null;
+        EnemyManager.Instance.enemies.Add(this);
+    }
 
     public bool IsPlayerNear(Transform UpRaycast, Transform DownRaycast, Transform RightRaycast, Transform LeftRaycast)
     {
@@ -39,7 +45,7 @@ public abstract class Enemies : MonoBehaviour
     {
         moveDistance = Random.Range(minValue, maxValue);
 
-        switch (Random.Range(0, 1))
+        switch (1)
         {
             case 0:
                 if (isPlayerNear)
@@ -70,16 +76,16 @@ public abstract class Enemies : MonoBehaviour
             switch (Random.Range(1, 4))
             {
                 case 1:
-                    transform.position += new Vector3(1, 0, 0);
+                    movePoint.transform.position += new Vector3(1, 0, 0);
                     break;
                 case 2:
-                    transform.position += new Vector3(-1, 0, 0);
+                    movePoint.transform.position += new Vector3(-1, 0, 0);
                     break;
                 case 3:
-                    transform.position += new Vector3(0, 1, 0);
+                    movePoint.transform.position += new Vector3(0, 1, 0);
                     break;
                 case 4:
-                    transform.position += new Vector3(0, -1, 0);
+                    movePoint.transform.position += new Vector3(0, -1, 0);
                     break;
             }
 
@@ -88,5 +94,10 @@ public abstract class Enemies : MonoBehaviour
 
         yield return new WaitForEndOfFrame();
         StartCoroutine(Move(moveSpeed, movePoint));
+    }
+
+    private void OnDestroy()
+    {
+        EnemyManager.Instance.enemies.Remove(this);
     }
 }

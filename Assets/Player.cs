@@ -6,29 +6,32 @@ public class Player : MonoBehaviour
 {
     public int health = 10;
 
-    public float moveSpeed = 0.2f;
+    public float moveSpeed = 1f;
 
-    public int minValue = 1;
-    public int maxValue = 2;
-    private float moveDistance;
+    public int minValue;
+    public int maxValue;
+    public float moveDistance= 2;
 
     public Transform movePoint;
+
+    private void Awake()
+    {
+        movePoint.parent = null;
+    }
 
     private void Update()
     {
         if (GameManager.Instance.turn == "Enemies")
             return;
 
-        if (moveDistance == 0)
-            SetMoveDistance(minValue, maxValue);
-
         transform.position = Vector3.MoveTowards(transform.position, movePoint.position, moveSpeed * Time.deltaTime);
 
-        if (Vector3.Distance(transform.position, movePoint.position) <= 0.05f)
+        if (Vector3.Distance(transform.position, movePoint.position) == 0f)
         {
             if (moveDistance == 0)
             {
                 GameManager.Instance.turn = "Enemies";
+                moveDistance = SetMoveDistance(minValue, maxValue);
                 return;
             }
 
@@ -41,12 +44,12 @@ public class Player : MonoBehaviour
             if (Mathf.Abs(Input.GetAxisRaw("Vertical")) == 1f)
             {
                 moveDistance--;
-                movePoint.position += new Vector3(0f, Input.GetAxisRaw("Horizontal"), 0f);
+                movePoint.position += new Vector3(0f, Input.GetAxisRaw("Vertical"), 0f);
             }
         }
     }
 
-    public void SetMoveDistance(int minValue, int maxValue) => moveDistance = Random.Range(minValue, maxValue);
+    public int SetMoveDistance(int minValue, int maxValue) => Random.Range(minValue, maxValue);
 
     public void TakeDamage(int amount) => health -= amount;
 }

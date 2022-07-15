@@ -1,12 +1,15 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public sealed class EnemyManager : MonoBehaviour
 {
-    public EnemyManager Instance { get; private set; }
+    public static EnemyManager Instance { get; private set; }
 
-    private List<Enemies> enemies = new List<Enemies>();
+    public List<Enemies> enemies = new List<Enemies>();
+
+    private bool enemiesMoving = false;
 
 
     private void Awake()
@@ -18,11 +21,30 @@ public sealed class EnemyManager : MonoBehaviour
     {
         if (GameManager.Instance.turn == "Enemies")
         {
-            foreach (Enemies enemy in enemies)
+            if (!enemiesMoving)
             {
-                enemy.TakeAction(1, 6, enemy.IsPlayerNear(enemy.UpRaycast, enemy.DownRaycast, enemy.RightRaycast, enemy.LeftRaycast), enemy.moveSpeed, enemy.movePoint);
+                foreach (Enemies enemy in enemies)
+                {
+                    enemy.TakeAction(1, 6, enemy.IsPlayerNear(enemy.UpRaycast, enemy.DownRaycast, enemy.RightRaycast, enemy.LeftRaycast), enemy.moveSpeed, enemy.movePoint);
+                }
+                enemiesMoving = true;
             }
-            GameManager.Instance.turn = "Player";
+            else
+            {
+                int enemiesNotMoving = 0;
+                foreach (Enemies enemy in enemies)
+                {
+                    if (!enemy.isMoving)
+                    {
+                        enemiesNotMoving++;
+                    }
+                }
+                if (enemiesNotMoving == enemies.Count)
+                {
+                    enemiesMoving = false;
+                    GameManager.Instance.turn = "Player";
+                }
+            }
         }
     }
 }
