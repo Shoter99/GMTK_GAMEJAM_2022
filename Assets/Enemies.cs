@@ -44,11 +44,11 @@ public abstract class Enemies : MonoBehaviour
             case 0:
                 if (isPlayerNear)
                 {
-
+                    player.GetComponent<Player>().TakeDamage(1);
                 }
                 break;
             case 1:
-                isMoving = false;
+                isMoving = true;
                 StartCoroutine(Move(moveSpeed, movePoint));
                 break;
 
@@ -63,7 +63,7 @@ public abstract class Enemies : MonoBehaviour
         {
             if (moveDistance == 0)
             {
-                isMoving = true;
+                isMoving = false;
                 yield break;
             }
 
