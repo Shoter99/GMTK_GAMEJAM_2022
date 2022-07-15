@@ -4,9 +4,21 @@ using UnityEngine;
 
 public abstract class Enemies : MonoBehaviour
 {
+    public int health = 10;
+
+    public float moveSpeed = 0.2f;
+
+    public int minValue = 1;
+    public int maxValue = 2;
+    private float moveDistance;
+
+    public bool isPlayerNear = false, isMoving = false;
+
+    public Transform UpRaycast, DownRaycast, RightRaycast, LeftRaycast, movePoint;
+
     private GameObject player;
 
-    private bool IsPlayerNear(Transform UpRaycast, Transform DownRaycast, Transform RightRaycast, Transform LeftRaycast)
+    public bool IsPlayerNear(Transform UpRaycast, Transform DownRaycast, Transform RightRaycast, Transform LeftRaycast)
     {
         if (Physics.Raycast(UpRaycast.position, Vector3.up, 1))
             return true;
@@ -23,9 +35,9 @@ public abstract class Enemies : MonoBehaviour
         return false;
     }
 
-    public void TakeAction(int minValue, int maxValue, bool isPlayerNear, int moveSpeed, Transform movePoint)
+    public void TakeAction(int minValue, int maxValue, bool isPlayerNear, float moveSpeed, Transform movePoint)
     {
-        int value = Random.Range(minValue, maxValue);
+        moveDistance = Random.Range(minValue, maxValue);
 
         switch (Random.Range(0, 1))
         {
@@ -36,20 +48,24 @@ public abstract class Enemies : MonoBehaviour
                 }
                 break;
             case 1:
-                Move(moveSpeed, value, movePoint);
+                isMoving = false;
+                StartCoroutine(Move(moveSpeed, movePoint));
                 break;
 
         }
     }
 
-    public void Move(int moveSpeed, int moveDistance, Transform movePoint)
+    public IEnumerator Move(float moveSpeed, Transform movePoint)
     {
         transform.position = Vector3.MoveTowards(transform.position, movePoint.position, moveSpeed * Time.deltaTime);
 
         if (Vector3.Distance(transform.position, movePoint.position) == 0)
         {
             if (moveDistance == 0)
-                return;
+            {
+                isMoving = true;
+                yield break;
+            }
 
             switch (Random.Range(1, 4))
             {
@@ -69,5 +85,8 @@ public abstract class Enemies : MonoBehaviour
 
             moveDistance--;
         }
+
+        yield return new WaitForEndOfFrame();
+        StartCoroutine(Move(moveSpeed, movePoint));
     }
 }

@@ -6,7 +6,7 @@ public sealed class EnemyManager : MonoBehaviour
 {
     public EnemyManager Instance { get; private set; }
 
-    private List<GameObject> enemies = new List<GameObject>();
+    private List<Enemies> enemies = new List<Enemies>();
 
 
     private void Awake()
@@ -18,9 +18,9 @@ public sealed class EnemyManager : MonoBehaviour
     {
         if (GameManager.Instance.turn == "Enemies")
         {
-            foreach (GameObject enemy in enemies)
+            foreach (Enemies enemy in enemies)
             {
-                //enemy.GetComponent<BasicEnemy>().TakeAction(1, 6, false, 0.2, );
+                enemy.TakeAction(1, 6, enemy.IsPlayerNear(enemy.UpRaycast, enemy.DownRaycast, enemy.RightRaycast, enemy.LeftRaycast), enemy.moveSpeed, enemy.movePoint);
             }
             GameManager.Instance.turn = "Player";
         }
