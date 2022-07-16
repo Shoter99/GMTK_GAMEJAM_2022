@@ -19,18 +19,20 @@ public sealed class EnemyManager : MonoBehaviour
 
     private void Update()
     {
+        // Kiedy jest tura przeciwnikow, Enemy Manager na razie wywo³e funkje TakeAction() wszystkim przeciwnikom rownoczesnie
         if (GameManager.Instance.turn == "Enemies")
         {
             if (!enemiesMoving)
             {
                 foreach (Enemies enemy in enemies)
                 {
-                    enemy.TakeAction(1, 6, enemy.IsPlayerNear(enemy.UpRaycast, enemy.DownRaycast, enemy.RightRaycast, enemy.LeftRaycast), enemy.moveSpeed, enemy.movePoint);
+                    enemy.TakeAction(1, 6, enemy.IsPlayerNear(enemy.raycasts[0], enemy.raycasts[1], enemy.raycasts[2], enemy.raycasts[3]), enemy.moveSpeed, enemy.movePoint);
                 }
                 enemiesMoving = true;
             }
             else
             {
+                // Kiedy wszyscy przeciwnicy wykonali swoj¹ akcje, zaczyna siê tura gracza
                 int enemiesNotMoving = 0;
                 foreach (Enemies enemy in enemies)
                 {
