@@ -18,11 +18,13 @@ public class Enemies : MonoBehaviour
 
     public Player player;
 
-    private void Awake()
+    public bool actionWaTaken = false;
+
+    private void Start()
     {
         movePoint.parent = null;
         EnemyManager.Instance.enemies.Add(this);
-        player = GameObject.Find("Square").GetComponent<Player>();
+        player = GameObject.Find("Player").GetComponent<Player>();
     }
 
     public bool IsPlayerNear(Transform UpRaycast, Transform DownRaycast, Transform RightRaycast, Transform LeftRaycast)
