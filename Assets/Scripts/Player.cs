@@ -4,6 +4,8 @@ using UnityEngine.AddressableAssets;
 
 public sealed class Player : MonoBehaviour
 {
+    public static Player Instance { get; private set; }
+
     public int health = 10;
 
     public bool valueIsRolled = false;
@@ -12,8 +14,7 @@ public sealed class Player : MonoBehaviour
     [Range(0, 20)]
     private float moveSpeed = 1f;
 
-    [SerializeField]
-    private int minValue, maxValue, valueRolled;
+    public int minValue, maxValue, valueRolled;
 
     [SerializeField]
     private string actionTaken = "None";
