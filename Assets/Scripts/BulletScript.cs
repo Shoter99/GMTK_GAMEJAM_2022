@@ -49,5 +49,18 @@ public sealed class BulletScript : MonoBehaviour
             collision.gameObject.GetComponent<Enemies>().health = collision.gameObject.GetComponent<Enemies>().TakeDamage(collision.gameObject.GetComponent<Enemies>().health, strength);
             Destroy(gameObject);
         }
+
+        if (collision.gameObject.CompareTag("Walls"))
+        {
+            Destroy(gameObject);
+        }
+    }
+
+    private void OnDestroy()
+    {
+        if (owner.CompareTag("Player"))
+        {
+            owner.GetComponent<Player>().bulletExists = false;
+        }
     }
 }

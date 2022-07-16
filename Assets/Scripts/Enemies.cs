@@ -94,18 +94,44 @@ public abstract class Enemies : MonoBehaviour
 
             //Zmienne do zmienienia, gdy bedzie znana odlegloc pomiedzy kwadratami
 
+            RaycastHit2D hit;
+
             switch (Random.Range(1, 5))
             {
                 case 1:
+                    hit = Physics2D.Raycast(raycasts[2].position, Vector3.right, raycastLength);
+                    if (hit)
+                    {
+                        StartCoroutine(Move(moveSpeed, movePoint));
+                        yield break;
+                    }                 
                     movePoint.transform.position += new Vector3(1, 0, 0);
                     break;
                 case 2:
+                    hit = Physics2D.Raycast(raycasts[3].position, Vector3.left, raycastLength);
+                    if (hit)
+                    {
+                        StartCoroutine(Move(moveSpeed, movePoint));
+                        yield break;
+                    }
                     movePoint.transform.position += new Vector3(-1, 0, 0);
                     break;
                 case 3:
+                    hit = Physics2D.Raycast(raycasts[0].position, Vector3.up, raycastLength);
+                    if (hit)
+                    {
+                        StartCoroutine(Move(moveSpeed, movePoint));
+                        yield break;
+                    }
                     movePoint.transform.position += new Vector3(0, 1, 0);
                     break;
                 case 4:
+                    hit = Physics2D.Raycast(raycasts[1].position, Vector3.down, raycastLength);
+                    if (hit)
+                    {
+                        StartCoroutine(Move(moveSpeed, movePoint));
+                        yield break;
+                    }
                     movePoint.transform.position += new Vector3(0, -1, 0);
                     break;
             }

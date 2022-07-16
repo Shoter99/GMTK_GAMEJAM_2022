@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 
@@ -8,7 +9,7 @@ public sealed class Player : MonoBehaviour
 
     public int health = 10;
 
-    public bool valueIsRolled = false;
+    public bool valueIsRolled = false, bulletExists = false;
 
     [SerializeField]
     [Range(0, 20)]
@@ -107,7 +108,8 @@ public sealed class Player : MonoBehaviour
             actionTaken = "None";
             valueRolled = 0;
             valueIsRolled = false;
-            GameManager.Instance.turn = "Enemies";
+            bulletExists = true;
+            StartCoroutine(WaitForBulletToDestroy());
         }
 
         if (Input.GetAxisRaw("Horizontal") == -1f)
@@ -119,7 +121,8 @@ public sealed class Player : MonoBehaviour
             actionTaken = "None";
             valueRolled = 0;
             valueIsRolled = false;
-            GameManager.Instance.turn = "Enemies";
+            bulletExists = true;
+            StartCoroutine(WaitForBulletToDestroy());
         }
 
         if (Input.GetAxisRaw("Vertical") == 1f)
@@ -131,7 +134,8 @@ public sealed class Player : MonoBehaviour
             actionTaken = "None";
             valueRolled = 0;
             valueIsRolled = false;
-            GameManager.Instance.turn = "Enemies";
+            bulletExists = true;
+            StartCoroutine(WaitForBulletToDestroy());
         }
 
         if (Input.GetAxisRaw("Vertical") == -1f)
@@ -143,7 +147,8 @@ public sealed class Player : MonoBehaviour
             actionTaken = "None";
             valueRolled = 0;
             valueIsRolled = false;
-            GameManager.Instance.turn = "Enemies";
+            bulletExists = true;
+            StartCoroutine(WaitForBulletToDestroy());
         }
     }
 
@@ -223,4 +228,18 @@ public sealed class Player : MonoBehaviour
     public int RollAValue(int minValue, int maxValue) => Random.Range(minValue, maxValue + 1);
 
     public int TakeDamage(int health, int amount) => health -= amount;
+
+
+    private IEnumerator WaitForBulletToDestroy()
+    {
+        yield return new WaitForEndOfFrame();
+        
+        if (!bulletExists)
+        {
+            GameManager.Instance.turn = "Enemies";
+            yield break;
+        }
+
+        StartCoroutine(WaitForBulletToDestroy());
+    }
 }
