@@ -60,12 +60,37 @@ public class Player : MonoBehaviour
                 }
                 break;
             case "Attack":
-                if (Input.GetMouseButtonDown(0))
+
+                if (Input.GetAxisRaw("Horizontal") == 1f)
                 {
                     GameObject bullet = Instantiate(Addressables.LoadAssetAsync<GameObject>("Bullet").WaitForCompletion(), transform.position + new Vector3(0, 0.5f, 0), transform.rotation);
-                    //bullet.transform.LookAt(Input.mousePosition);
-                    GameManager.Instance.turn = "Enemies";
+                    bullet.GetComponent<BulletScript>().direction = "Right";
                     actionTaken = "None";
+                    GameManager.Instance.turn = "Enemies";
+                }
+
+                if (Input.GetAxisRaw("Horizontal") == -1f)
+                {
+                    GameObject bullet = Instantiate(Addressables.LoadAssetAsync<GameObject>("Bullet").WaitForCompletion(), transform.position + new Vector3(0, 0.5f, 0), transform.rotation);
+                    bullet.GetComponent<BulletScript>().direction = "Left";
+                    actionTaken = "None";
+                    GameManager.Instance.turn = "Enemies";
+                }
+
+                if (Input.GetAxisRaw("Vertical") == 1f)
+                {
+                    GameObject bullet = Instantiate(Addressables.LoadAssetAsync<GameObject>("Bullet").WaitForCompletion(), transform.position + new Vector3(0, 0.5f, 0), transform.rotation);
+                    bullet.GetComponent<BulletScript>().direction = "Up";
+                    actionTaken = "None";
+                    GameManager.Instance.turn = "Enemies";
+                }
+
+                if (Input.GetAxisRaw("Vertical") == -1f)
+                {
+                    GameObject bullet = Instantiate(Addressables.LoadAssetAsync<GameObject>("Bullet").WaitForCompletion(), transform.position + new Vector3(0, 0.5f, 0), transform.rotation);
+                    bullet.GetComponent<BulletScript>().direction = "Down";
+                    actionTaken = "None";
+                    GameManager.Instance.turn = "Enemies";
                 }
                 break;
         }
