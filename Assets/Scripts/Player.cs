@@ -8,6 +8,9 @@ public sealed class Player : MonoBehaviour
     public static Player Instance { get; private set; }
 
     public int health = 10;
+    public int actionsLeft = 2;
+    public int damageResistanceStrength = 0;
+    public int shieldDurabality = 0;
 
     public bool valueIsRolled = false, bulletExists = false;
 
@@ -25,8 +28,10 @@ public sealed class Player : MonoBehaviour
 
     private Transform movePoint;
 
+
     private void Awake()
     {
+        Instance = this;
         movePoint = transform.GetChild(0).transform;
         movePoint.parent = null;
     }
@@ -34,6 +39,9 @@ public sealed class Player : MonoBehaviour
     private void Update()
     {
         if (GameManager.Instance.turn == "Enemies")
+            return;
+
+        if (bulletExists)
             return;
 
         if (!valueIsRolled)
@@ -45,6 +53,8 @@ public sealed class Player : MonoBehaviour
         switch (actionTaken)
         {
             case "None":
+                if (actionsLeft <= 0)
+                    GameManager.Instance.turn = "Enemies";
                 return;
 
             case "Move":
@@ -57,11 +67,7 @@ public sealed class Player : MonoBehaviour
                 MeleeAttack();
                 break;
             case "Heal":
-                health = Heal(health);
-                valueRolled = 0;
-                valueIsRolled = false;
-                actionTaken = "None";
-                GameManager.Instance.turn = "Enemies";
+                Heal();
                 break;
             case "Defend":
                 Defend();
@@ -78,7 +84,7 @@ public sealed class Player : MonoBehaviour
             if (valueRolled == 0)
             {
                 valueIsRolled = false;
-                GameManager.Instance.turn = "Enemies";
+                actionsLeft--;
                 actionTaken = "None";
                 return;
             }
@@ -147,7 +153,7 @@ public sealed class Player : MonoBehaviour
             valueRolled = 0;
             valueIsRolled = false;
             bulletExists = true;
-            StartCoroutine(WaitForBulletToDestroy());
+            actionsLeft--;
         }
 
         if (Input.GetAxisRaw("Horizontal") == -1f)
@@ -160,7 +166,7 @@ public sealed class Player : MonoBehaviour
             valueRolled = 0;
             valueIsRolled = false;
             bulletExists = true;
-            StartCoroutine(WaitForBulletToDestroy());
+            actionsLeft--;
         }
 
         if (Input.GetAxisRaw("Vertical") == 1f)
@@ -173,7 +179,7 @@ public sealed class Player : MonoBehaviour
             valueRolled = 0;
             valueIsRolled = false;
             bulletExists = true;
-            StartCoroutine(WaitForBulletToDestroy());
+            actionsLeft--;
         }
 
         if (Input.GetAxisRaw("Vertical") == -1f)
@@ -186,15 +192,26 @@ public sealed class Player : MonoBehaviour
             valueRolled = 0;
             valueIsRolled = false;
             bulletExists = true;
-            StartCoroutine(WaitForBulletToDestroy());
+            actionsLeft--;
         }
     }
 
     private void MeleeAttack()
     {
+        int range;
+
+        if (valueRolled >= 5)
+        {
+            range = 2;
+        }
+        else
+        {
+            range = 1;
+        }
+
         if (Input.GetAxisRaw("Horizontal") == 1f)
         {
-            RaycastHit2D hit = Physics2D.Raycast(raycasts[2].position, Vector3.right, 1);
+            RaycastHit2D hit = Physics2D.Raycast(raycasts[2].position, Vector3.right, range);
 
             if (hit)
             {
@@ -207,12 +224,12 @@ public sealed class Player : MonoBehaviour
             valueRolled = 0;
             valueIsRolled = false;
             actionTaken = "None";
-            GameManager.Instance.turn = "Enemies";
+            actionsLeft--;
         }
 
         if (Input.GetAxisRaw("Horizontal") == -1f)
         {
-            RaycastHit2D hit = Physics2D.Raycast(raycasts[3].position, Vector3.left, 1);
+            RaycastHit2D hit = Physics2D.Raycast(raycasts[3].position, Vector3.left, range);
 
             if (hit)
             {
@@ -225,12 +242,12 @@ public sealed class Player : MonoBehaviour
             valueRolled = 0;
             valueIsRolled = false;
             actionTaken = "None";
-            GameManager.Instance.turn = "Enemies";
+            actionsLeft--;
         }
 
         if (Input.GetAxisRaw("Vertical") == 1f)
         {
-            RaycastHit2D hit = Physics2D.Raycast(raycasts[0].position, Vector3.up, 1);
+            RaycastHit2D hit = Physics2D.Raycast(raycasts[0].position, Vector3.up, range);
 
             if (hit)
             {
@@ -243,12 +260,12 @@ public sealed class Player : MonoBehaviour
             valueRolled = 0;
             valueIsRolled = false;
             actionTaken = "None";
-            GameManager.Instance.turn = "Enemies";
+            actionsLeft--;
         }
 
         if (Input.GetAxisRaw("Vertical") == -1f)
         {
-            RaycastHit2D hit = Physics2D.Raycast(raycasts[1].position, Vector3.down, 1);
+            RaycastHit2D hit = Physics2D.Raycast(raycasts[1].position, Vector3.down, range);
 
             if (hit)
             {
@@ -261,35 +278,47 @@ public sealed class Player : MonoBehaviour
             valueRolled = 0;
             valueIsRolled = false;
             actionTaken = "None";
-            GameManager.Instance.turn = "Enemies";
+            actionsLeft--;
         }
+    }
+
+    private void Heal()
+    {
+        health += (int)Mathf.Floor(valueRolled * 1.5f);
+        valueRolled = 0;
+        valueIsRolled = false;
+        actionTaken = "None";
+        actionsLeft--;
     }
     
     private void Defend()
     {
+        shieldDurabality = 2;
+        damageResistanceStrength = valueRolled;
         actionTaken = "None";
-        GameManager.Instance.turn = "Enemies";
+        actionsLeft--;
         valueRolled = 0;
         valueIsRolled = false;
     }
 
-    private int Heal(int health) => health + valueRolled;
-
     public int RollAValue(int minValue, int maxValue) => Random.Range(minValue, maxValue + 1);
 
-    public int TakeDamage(int health, int amount) => health -= amount;
-
-
-    private IEnumerator WaitForBulletToDestroy()
+    public void TakeDamage(int amount)
     {
-        yield return new WaitForEndOfFrame();
-        
-        if (!bulletExists)
+        if (shieldDurabality == 0)
         {
-            GameManager.Instance.turn = "Enemies";
-            yield break;
+            health -= amount;
         }
-
-        StartCoroutine(WaitForBulletToDestroy());
+        else
+        {
+            if (amount >= damageResistanceStrength)
+            {
+                health -= amount;
+            }
+            else
+            {
+                shieldDurabality--;
+            }
+        }
     }
 }

@@ -6,94 +6,53 @@ public abstract class Enemies : MonoBehaviour
 {
     public int health = 10;
 
-    [SerializeField]
-    private int moveDistance;
-
-    public int minValue, maxValue;
-
-    [SerializeField]
-    private float raycastLength;
+    public int minValue, maxValue, rolledValue;
 
     [Range(0, 20)]
     public float moveSpeed;
 
-    public bool playerNear = false, isMoving = false;
+    public bool isMoving = false;
 
+
+    public float raycastLength;
+
+    [HideInInspector]
     public Transform movePoint;
 
+    [HideInInspector]
     public List<Transform> raycasts = new List<Transform>();
 
+    [HideInInspector]
     public Player player;
 
-
-    private void Start()
+    private void Awake()
     {
+        movePoint = transform.GetChild(0);
         movePoint.parent = null;
-        EnemyManager.Instance.enemies.Add(this);
         player = GameObject.Find("Player").GetComponent<Player>();
-    }
 
-    // Sprawdza, czy gracz jest w pobli¿u by mog³ zadaæ damage. Plan jest by przerobiæ to w strzalanie
-    public bool IsPlayerNear(Transform UpRaycast, Transform DownRaycast, Transform RightRaycast, Transform LeftRaycast)
-    {
-        if (Physics2D.Raycast(UpRaycast.position, Vector3.up, raycastLength))
-            return true;
-
-        if (Physics2D.Raycast(DownRaycast.position, Vector3.down, raycastLength))
-            return true;
-
-        if (Physics2D.Raycast(RightRaycast.position, Vector3.right, raycastLength))
-            return true;
-
-        if (Physics2D.Raycast(LeftRaycast.position, Vector3.left, raycastLength))
-            return true;
-
-        return false;
-    }
-
-    private void FixedUpdate()
-    {
-        // Nie potrzebne, tylko do Debugowania
-        playerNear = IsPlayerNear(raycasts[0], raycasts[1], raycasts[2], raycasts[3]);
-    }
-
-    public void TakeAction(int minValue, int maxValue, bool isPlayerNear, float moveSpeed, Transform movePoint)
-    {
-        //Losuje pomiedzy atakiem i poruszanie sie
-        switch (Random.Range(1, 3))
+        for (int i = 0; i < 4; i++)
         {
-            case 1:
-                Attack();
-                break;
-            case 2:
-                moveDistance = Random.Range(minValue, maxValue);
-                isMoving = true;
-                StartCoroutine(Move(moveSpeed, movePoint));
-                break;
+            raycasts.Add(transform.GetChild(i).transform);
         }
     }
 
-    // Raczej glowna roznica pomiedzy przeciwnikami bedzie rodzaj ataku. Pomysl jest by przeciwnicy dziedziczyli ta klasa
-    // i uzywali public override Attack() {}, oraz zmieniali zmienne w inspectorze by rzuczali innymi koscmi. Przyklad w BasicEnemy
     public virtual void Attack()
     {
-
+        rolledValue = RollNumber(minValue, maxValue);
     }
 
-    public IEnumerator Move(float moveSpeed, Transform movePoint)
+    public IEnumerator Move()
     {
         transform.position = Vector3.MoveTowards(transform.position, movePoint.position, moveSpeed * Time.deltaTime);
 
         if (Vector3.Distance(transform.position, movePoint.position) == 0)
         {
-            // Porusza sie dopoki nie wyczerpie mu sie wylosowana odleglosc
-            if (moveDistance == 0)
+            if (rolledValue == 0)
             {
                 isMoving = false;
                 yield break;
             }
-
-            //Zmienne do zmienienia, gdy bedzie znana odlegloc pomiedzy kwadratami
 
             RaycastHit2D hit;
 
@@ -103,7 +62,7 @@ public abstract class Enemies : MonoBehaviour
                     hit = Physics2D.Raycast(raycasts[2].position, Vector2.right, raycastLength);
                     if (hit)
                     {
-                        StartCoroutine(Move(moveSpeed, movePoint));
+                        StartCoroutine(Move());
                         yield break;
                     }                 
                     movePoint.transform.position += new Vector3(1, 0, 0);
@@ -112,7 +71,7 @@ public abstract class Enemies : MonoBehaviour
                     hit = Physics2D.Raycast(raycasts[3].position, Vector2.left, raycastLength);
                     if (hit)
                     {
-                        StartCoroutine(Move(moveSpeed, movePoint));
+                        StartCoroutine(Move());
                         yield break;
                     }
                     movePoint.transform.position += new Vector3(-1, 0, 0);
@@ -121,7 +80,7 @@ public abstract class Enemies : MonoBehaviour
                     hit = Physics2D.Raycast(raycasts[0].position, Vector2.up, raycastLength);
                     if (hit)
                     {
-                        StartCoroutine(Move(moveSpeed, movePoint));
+                        StartCoroutine(Move());
                         yield break;
                     }
                     movePoint.transform.position += new Vector3(0, 1, 0);
@@ -130,23 +89,18 @@ public abstract class Enemies : MonoBehaviour
                     hit = Physics2D.Raycast(raycasts[1].position, Vector2.down, raycastLength);
                     if (hit)
                     {
-                        StartCoroutine(Move(moveSpeed, movePoint));
+                        StartCoroutine(Move());
                         yield break;
                     }
                     movePoint.transform.position += new Vector3(0, -1, 0);
                     break;
             }
 
-            moveDistance--;
+            rolledValue--;
         }
 
         yield return new WaitForEndOfFrame();
-        StartCoroutine(Move(moveSpeed, movePoint));
-    }
-
-    private void OnDestroy()
-    {
-        EnemyManager.Instance.enemies.Remove(this);
+        StartCoroutine(Move());
     }
 
     public int TakeDamage(int health, int amount) => health -= amount;
