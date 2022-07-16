@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using System.Collections;
 using UnityEngine;
-using UnityEngine.AddressableAssets;
 
 public abstract class Enemies : MonoBehaviour
 {
@@ -9,8 +8,7 @@ public abstract class Enemies : MonoBehaviour
 
     private int moveDistance;
 
-    [SerializeField]
-    private int minValue, maxValue;
+    public int minValue, maxValue;
 
     [SerializeField]
     private float raycastLength;
@@ -18,15 +16,14 @@ public abstract class Enemies : MonoBehaviour
     [Range(0, 20)]
     public float moveSpeed;
 
-    public bool isPlayerNear = false, isMoving = false;
+    public bool playerNear = false, isMoving = false;
 
     public Transform movePoint;
 
     public List<Transform> raycasts = new List<Transform>();
 
-    private Player player;
+    public Player player;
 
-    //public bool actionWaTaken = false;
 
     private void Start()
     {
@@ -56,21 +53,18 @@ public abstract class Enemies : MonoBehaviour
     private void FixedUpdate()
     {
         // Nie potrzebne, tylko do Debugowania
-        isPlayerNear = IsPlayerNear(raycasts[0], raycasts[1], raycasts[2], raycasts[3]);
+        playerNear = IsPlayerNear(raycasts[0], raycasts[1], raycasts[2], raycasts[3]);
     }
 
     public void TakeAction(int minValue, int maxValue, bool isPlayerNear, float moveSpeed, Transform movePoint)
     {
         //Losuje pomiedzy atakiem i poruszanie sie
-        switch (Random.Range(0, 2))
+        switch (Random.Range(1, 3))
         {
-            case 0:
-                if (isPlayerNear)
-                {
-                    Attack();
-                }
-                break;
             case 1:
+                Attack();
+                break;
+            case 2:
                 moveDistance = Random.Range(minValue, maxValue);
                 isMoving = true;
                 StartCoroutine(Move(moveSpeed, movePoint));
@@ -82,8 +76,7 @@ public abstract class Enemies : MonoBehaviour
     // i uzywali public override Attack() {}, oraz zmieniali zmienne w inspectorze by rzuczali innymi koscmi. Przyklad w BasicEnemy
     public virtual void Attack()
     {
-        //Instantiate(Addressables.LoadAssetAsync<GameObject>("Bullet").WaitForCompletion(), transform.position, Quaternion.identity);
-        player.health = player.TakeDamage(player.health, 1);
+
     }
 
     public IEnumerator Move(float moveSpeed, Transform movePoint)
@@ -101,7 +94,7 @@ public abstract class Enemies : MonoBehaviour
 
             //Zmienne do zmienienia, gdy bedzie znana odlegloc pomiedzy kwadratami
 
-            switch (Random.Range(1, 4))
+            switch (Random.Range(1, 5))
             {
                 case 1:
                     movePoint.transform.position += new Vector3(1, 0, 0);
@@ -130,4 +123,6 @@ public abstract class Enemies : MonoBehaviour
     }
 
     public int TakeDamage(int health, int amount) => health -= amount;
+
+    public int RollNumber(int minValue, int maxValue) => Random.Range(minValue, maxValue + 1);
 }

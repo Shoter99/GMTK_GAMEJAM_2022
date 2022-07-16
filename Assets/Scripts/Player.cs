@@ -1,9 +1,8 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 
-public class Player : MonoBehaviour
+public sealed class Player : MonoBehaviour
 {
     public int health = 10;
 
@@ -76,7 +75,6 @@ public class Player : MonoBehaviour
         {
             if (valueRolled == 0)
             {
-                Debug.Log("Test1");
                 valueIsRolled = false;
                 GameManager.Instance.turn = "Enemies";
                 actionTaken = "None";
@@ -101,9 +99,10 @@ public class Player : MonoBehaviour
     {
         if (Input.GetAxisRaw("Horizontal") == 1f)
         {
-            GameObject bullet = Instantiate(Addressables.LoadAssetAsync<GameObject>("Bullet").WaitForCompletion(), transform.position + new Vector3(0, 0.5f, 0), transform.rotation);
+            GameObject bullet = Instantiate(Addressables.LoadAssetAsync<GameObject>("Bullet").WaitForCompletion(), transform.position, Quaternion.identity);
             bullet.GetComponent<BulletScript>().direction = "Right";
             bullet.GetComponent<BulletScript>().strength = valueRolled;
+            bullet.GetComponent<BulletScript>().owner = gameObject;
             actionTaken = "None";
             valueRolled = 0;
             valueIsRolled = false;
@@ -112,9 +111,10 @@ public class Player : MonoBehaviour
 
         if (Input.GetAxisRaw("Horizontal") == -1f)
         {
-            GameObject bullet = Instantiate(Addressables.LoadAssetAsync<GameObject>("Bullet").WaitForCompletion(), transform.position + new Vector3(0, 0.5f, 0), transform.rotation);
+            GameObject bullet = Instantiate(Addressables.LoadAssetAsync<GameObject>("Bullet").WaitForCompletion(), transform.position, Quaternion.identity);
             bullet.GetComponent<BulletScript>().direction = "Left";
             bullet.GetComponent<BulletScript>().strength = valueRolled;
+            bullet.GetComponent<BulletScript>().owner = gameObject;
             actionTaken = "None";
             valueRolled = 0;
             valueIsRolled = false;
@@ -123,9 +123,10 @@ public class Player : MonoBehaviour
 
         if (Input.GetAxisRaw("Vertical") == 1f)
         {
-            GameObject bullet = Instantiate(Addressables.LoadAssetAsync<GameObject>("Bullet").WaitForCompletion(), transform.position + new Vector3(0, 0.5f, 0), transform.rotation);
+            GameObject bullet = Instantiate(Addressables.LoadAssetAsync<GameObject>("Bullet").WaitForCompletion(), transform.position, Quaternion.identity);
             bullet.GetComponent<BulletScript>().direction = "Up";
             bullet.GetComponent<BulletScript>().strength = valueRolled;
+            bullet.GetComponent<BulletScript>().owner = gameObject;
             actionTaken = "None";
             valueRolled = 0;
             valueIsRolled = false;
@@ -134,9 +135,10 @@ public class Player : MonoBehaviour
 
         if (Input.GetAxisRaw("Vertical") == -1f)
         {
-            GameObject bullet = Instantiate(Addressables.LoadAssetAsync<GameObject>("Bullet").WaitForCompletion(), transform.position + new Vector3(0, 0.5f, 0), transform.rotation);
+            GameObject bullet = Instantiate(Addressables.LoadAssetAsync<GameObject>("Bullet").WaitForCompletion(), transform.position, Quaternion.identity);
             bullet.GetComponent<BulletScript>().direction = "Down";
             bullet.GetComponent<BulletScript>().strength = valueRolled;
+            bullet.GetComponent<BulletScript>().owner = gameObject;
             actionTaken = "None";
             valueRolled = 0;
             valueIsRolled = false;
@@ -206,8 +208,6 @@ public class Player : MonoBehaviour
             GameManager.Instance.turn = "Enemies";
         }
     }
-
-    private int Heal(int health) => health + valueRolled;
     
     private void Defend()
     {
@@ -217,7 +217,9 @@ public class Player : MonoBehaviour
         valueIsRolled = false;
     }
 
-    public int RollAValue(int minValue, int maxValue) => Random.Range(minValue, maxValue);
+    private int Heal(int health) => health + valueRolled;
+
+    public int RollAValue(int minValue, int maxValue) => Random.Range(minValue, maxValue + 1);
 
     public int TakeDamage(int health, int amount) => health -= amount;
 }
