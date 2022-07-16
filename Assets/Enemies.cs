@@ -16,41 +16,47 @@ public class Enemies : MonoBehaviour
 
     public Transform UpRaycast, DownRaycast, RightRaycast, LeftRaycast, movePoint;
 
-    private GameObject player;
+    public Player player;
 
     private void Awake()
     {
         movePoint.parent = null;
         EnemyManager.Instance.enemies.Add(this);
+        player = GameObject.Find("Square").GetComponent<Player>();
     }
 
     public bool IsPlayerNear(Transform UpRaycast, Transform DownRaycast, Transform RightRaycast, Transform LeftRaycast)
     {
-        if (Physics.Raycast(UpRaycast.position, Vector3.up, 1))
+        if (Physics2D.Raycast(UpRaycast.position, Vector3.up, 10))
             return true;
 
-        if (Physics.Raycast(DownRaycast.position, Vector3.down, 1))
+        if (Physics2D.Raycast(DownRaycast.position, Vector3.down, 10))
             return true;
 
-        if (Physics.Raycast(RightRaycast.position, Vector3.right, 1))
+        if (Physics2D.Raycast(RightRaycast.position, Vector3.right, 10))
             return true;
 
-        if (Physics.Raycast(LeftRaycast.position, Vector3.left, 1))
+        if (Physics2D.Raycast(LeftRaycast.position, Vector3.left, 10))
             return true;
 
         return false;
+    }
+
+    private void FixedUpdate()
+    {
+        isPlayerNear = IsPlayerNear(UpRaycast, DownRaycast, RightRaycast, LeftRaycast);
     }
 
     public void TakeAction(int minValue, int maxValue, bool isPlayerNear, float moveSpeed, Transform movePoint)
     {
         moveDistance = Random.Range(minValue, maxValue);
 
-        switch (1)
+        switch (Random.Range(0, 2))
         {
             case 0:
                 if (isPlayerNear)
                 {
-                    player.GetComponent<Player>().TakeDamage(1);
+                    player.health = player.TakeDamage(player.health, 1);
                 }
                 break;
             case 1:

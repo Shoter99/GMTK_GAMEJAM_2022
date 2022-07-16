@@ -51,5 +51,5 @@ public class Player : MonoBehaviour
 
     public int SetMoveDistance(int minValue, int maxValue) => Random.Range(minValue, maxValue);
 
-    public void TakeDamage(int amount) => health -= amount;
+    public int TakeDamage(int health, int amount) => health -= amount;
 }
