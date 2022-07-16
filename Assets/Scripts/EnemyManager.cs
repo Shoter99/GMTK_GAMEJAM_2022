@@ -7,7 +7,7 @@ public sealed class EnemyManager : MonoBehaviour
 
     public List<MeleeEnemy> meleeEnemies = new List<MeleeEnemy>();
     public List<FireEnemy> rangeEnemies = new List<FireEnemy>();
-    public List<Enemies> sapperEnemies = new List<Enemies>();
+    public List<MinerEnemy> minerEnemies = new List<MinerEnemy>();
 
     public string phase = "None";
 
@@ -26,7 +26,24 @@ public sealed class EnemyManager : MonoBehaviour
 
 
         if (phase == "None")
+        {
             phase = "Fire";
+
+            foreach (MeleeEnemy enemy in meleeEnemies)
+            {
+                enemy.rolledValue = enemy.RollNumber(enemy.minValue, enemy.maxValue);
+            }
+
+            foreach (FireEnemy enemy in rangeEnemies)
+            {
+                enemy.rolledValue = enemy.RollNumber(enemy.minValue, enemy.maxValue);
+            }
+
+            foreach (MinerEnemy enemy in minerEnemies)
+            {
+                enemy.rolledValue = enemy.RollNumber(enemy.minValue, enemy.maxValue);
+            }
+        }
 
         switch (phase)
         {
@@ -66,7 +83,7 @@ public sealed class EnemyManager : MonoBehaviour
                             return;
                     }
 
-                    foreach (Enemies enemy in sapperEnemies)
+                    foreach (MinerEnemy enemy in minerEnemies)
                     {
                         if (enemy.isMoving)
                             return;
@@ -94,7 +111,7 @@ public sealed class EnemyManager : MonoBehaviour
                         }
                     }
 
-                    foreach (Enemies enemy in sapperEnemies)
+                    foreach (MinerEnemy enemy in minerEnemies)
                     {
                         enemy.isMoving = true;
                         StartCoroutine(enemy.Move());

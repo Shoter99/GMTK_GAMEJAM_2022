@@ -8,6 +8,8 @@ public abstract class Enemies : MonoBehaviour
 
     public int minValue, maxValue, rolledValue;
 
+    private int stackOverFlowProtection = 0;
+
     [Range(0, 20)]
     public float moveSpeed;
 
@@ -39,7 +41,7 @@ public abstract class Enemies : MonoBehaviour
 
     public virtual void Attack()
     {
-        rolledValue = RollNumber(minValue, maxValue);
+        
     }
 
     public IEnumerator Move()
@@ -62,6 +64,12 @@ public abstract class Enemies : MonoBehaviour
                     hit = Physics2D.Raycast(raycasts[2].position, Vector2.right, raycastLength);
                     if (hit)
                     {
+                        stackOverFlowProtection++;
+                        if (stackOverFlowProtection >= 50)
+                        {
+                            isMoving = false;
+                            yield break;
+                        }
                         StartCoroutine(Move());
                         yield break;
                     }                 
@@ -71,6 +79,12 @@ public abstract class Enemies : MonoBehaviour
                     hit = Physics2D.Raycast(raycasts[3].position, Vector2.left, raycastLength);
                     if (hit)
                     {
+                        stackOverFlowProtection++;
+                        if (stackOverFlowProtection >= 50)
+                        {
+                            isMoving = false;
+                            yield break;
+                        }
                         StartCoroutine(Move());
                         yield break;
                     }
@@ -80,6 +94,12 @@ public abstract class Enemies : MonoBehaviour
                     hit = Physics2D.Raycast(raycasts[0].position, Vector2.up, raycastLength);
                     if (hit)
                     {
+                        stackOverFlowProtection++;
+                        if (stackOverFlowProtection >= 50)
+                        {
+                            isMoving = false;
+                            yield break;
+                        }
                         StartCoroutine(Move());
                         yield break;
                     }
@@ -89,6 +109,12 @@ public abstract class Enemies : MonoBehaviour
                     hit = Physics2D.Raycast(raycasts[1].position, Vector2.down, raycastLength);
                     if (hit)
                     {
+                        stackOverFlowProtection++;
+                        if (stackOverFlowProtection >= 50)
+                        {
+                            isMoving = false;
+                            yield break;
+                        }
                         StartCoroutine(Move());
                         yield break;
                     }
@@ -99,6 +125,7 @@ public abstract class Enemies : MonoBehaviour
             rolledValue--;
         }
 
+        stackOverFlowProtection = 0;
         yield return new WaitForEndOfFrame();
         StartCoroutine(Move());
     }
