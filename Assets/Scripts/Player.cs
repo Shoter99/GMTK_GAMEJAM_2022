@@ -83,16 +83,54 @@ public sealed class Player : MonoBehaviour
                 return;
             }
 
+            RaycastHit2D hit;
+
             if (Mathf.Abs(Input.GetAxisRaw("Horizontal")) == 1f)
             {
-                valueRolled--;
-                movePoint.position += new Vector3(Input.GetAxisRaw("Horizontal"), 0f, 0f);
+                switch (Input.GetAxisRaw("Horizontal"))
+                {
+                    case 1f:
+                        hit = Physics2D.Raycast(raycasts[2].position, Vector2.right, 1);
+                        if (!hit)
+                        {
+                            valueRolled--;
+                            movePoint.position += new Vector3(Input.GetAxisRaw("Horizontal"), 0f, 0f);
+                        }
+                        break;
+
+                    case -1f:
+                        hit = Physics2D.Raycast(raycasts[3].position, Vector2.left, 1);
+                        if (!hit)
+                        {
+                            valueRolled--;
+                            movePoint.position += new Vector3(Input.GetAxisRaw("Horizontal"), 0f, 0f);
+                        }
+                        break;
+                }
             }
 
             if (Mathf.Abs(Input.GetAxisRaw("Vertical")) == 1f)
             {
-                valueRolled--;
-                movePoint.position += new Vector3(0f, Input.GetAxisRaw("Vertical"), 0f);
+                switch (Input.GetAxisRaw("Vertical"))
+                {
+                    case 1f:
+                        hit = Physics2D.Raycast(raycasts[0].position, Vector2.up, 1);
+                        if (!hit)
+                        {
+                            valueRolled--;
+                            movePoint.position += new Vector3(0f, Input.GetAxisRaw("Vertical"), 0f);
+                        }
+                        break;
+
+                    case -1f:
+                        hit = Physics2D.Raycast(raycasts[1].position, Vector2.down, 1);
+                        if (!hit)
+                        {
+                            valueRolled--;
+                            movePoint.position += new Vector3(0f, Input.GetAxisRaw("Vertical"), 0f);
+                        }
+                        break;
+                }
             }
         }
     }
@@ -160,7 +198,10 @@ public sealed class Player : MonoBehaviour
 
             if (hit)
             {
-                hit.collider.gameObject.GetComponent<Enemies>().health = hit.collider.gameObject.GetComponent<Enemies>().TakeDamage(hit.collider.gameObject.GetComponent<Enemies>().health, valueRolled);
+                if (hit.collider.gameObject.CompareTag("Enemy"))
+                {
+                    hit.collider.gameObject.GetComponent<Enemies>().health = hit.collider.gameObject.GetComponent<Enemies>().TakeDamage(hit.collider.gameObject.GetComponent<Enemies>().health, valueRolled);
+                }
             }
 
             valueRolled = 0;
@@ -175,7 +216,10 @@ public sealed class Player : MonoBehaviour
 
             if (hit)
             {
-                hit.collider.gameObject.GetComponent<Enemies>().health = hit.collider.gameObject.GetComponent<Enemies>().TakeDamage(hit.collider.gameObject.GetComponent<Enemies>().health, valueRolled);
+                if (hit.collider.gameObject.CompareTag("Enemy"))
+                {
+                    hit.collider.gameObject.GetComponent<Enemies>().health = hit.collider.gameObject.GetComponent<Enemies>().TakeDamage(hit.collider.gameObject.GetComponent<Enemies>().health, valueRolled);
+                }
             }
 
             valueRolled = 0;
@@ -190,7 +234,10 @@ public sealed class Player : MonoBehaviour
 
             if (hit)
             {
-                hit.collider.gameObject.GetComponent<Enemies>().health = hit.collider.gameObject.GetComponent<Enemies>().TakeDamage(hit.collider.gameObject.GetComponent<Enemies>().health, valueRolled);
+                if (hit.collider.gameObject.CompareTag("Enemy"))
+                {
+                    hit.collider.gameObject.GetComponent<Enemies>().health = hit.collider.gameObject.GetComponent<Enemies>().TakeDamage(hit.collider.gameObject.GetComponent<Enemies>().health, valueRolled);
+                }
             }
 
             valueRolled = 0;
@@ -205,7 +252,10 @@ public sealed class Player : MonoBehaviour
 
             if (hit)
             {
-                hit.collider.gameObject.GetComponent<Enemies>().health = hit.collider.gameObject.GetComponent<Enemies>().TakeDamage(hit.collider.gameObject.GetComponent<Enemies>().health, valueRolled);
+                if (hit.collider.gameObject.CompareTag("Enemy"))
+                {
+                    hit.collider.gameObject.GetComponent<Enemies>().health = hit.collider.gameObject.GetComponent<Enemies>().TakeDamage(hit.collider.gameObject.GetComponent<Enemies>().health, valueRolled);
+                }
             }
 
             valueRolled = 0;

@@ -6,6 +6,7 @@ public abstract class Enemies : MonoBehaviour
 {
     public int health = 10;
 
+    [SerializeField]
     private int moveDistance;
 
     public int minValue, maxValue;
@@ -99,7 +100,7 @@ public abstract class Enemies : MonoBehaviour
             switch (Random.Range(1, 5))
             {
                 case 1:
-                    hit = Physics2D.Raycast(raycasts[2].position, Vector3.right, raycastLength);
+                    hit = Physics2D.Raycast(raycasts[2].position, Vector2.right, raycastLength);
                     if (hit)
                     {
                         StartCoroutine(Move(moveSpeed, movePoint));
@@ -108,7 +109,7 @@ public abstract class Enemies : MonoBehaviour
                     movePoint.transform.position += new Vector3(1, 0, 0);
                     break;
                 case 2:
-                    hit = Physics2D.Raycast(raycasts[3].position, Vector3.left, raycastLength);
+                    hit = Physics2D.Raycast(raycasts[3].position, Vector2.left, raycastLength);
                     if (hit)
                     {
                         StartCoroutine(Move(moveSpeed, movePoint));
@@ -117,7 +118,7 @@ public abstract class Enemies : MonoBehaviour
                     movePoint.transform.position += new Vector3(-1, 0, 0);
                     break;
                 case 3:
-                    hit = Physics2D.Raycast(raycasts[0].position, Vector3.up, raycastLength);
+                    hit = Physics2D.Raycast(raycasts[0].position, Vector2.up, raycastLength);
                     if (hit)
                     {
                         StartCoroutine(Move(moveSpeed, movePoint));
@@ -126,7 +127,7 @@ public abstract class Enemies : MonoBehaviour
                     movePoint.transform.position += new Vector3(0, 1, 0);
                     break;
                 case 4:
-                    hit = Physics2D.Raycast(raycasts[1].position, Vector3.down, raycastLength);
+                    hit = Physics2D.Raycast(raycasts[1].position, Vector2.down, raycastLength);
                     if (hit)
                     {
                         StartCoroutine(Move(moveSpeed, movePoint));

@@ -24,7 +24,7 @@ public sealed class EnemyManager : MonoBehaviour
             {
                 foreach (Enemies enemy in enemies)
                 {
-                    enemy.TakeAction(1, 6, enemy.IsPlayerNear(enemy.raycasts[0], enemy.raycasts[1], enemy.raycasts[2], enemy.raycasts[3]), enemy.moveSpeed, enemy.movePoint);
+                    enemy.TakeAction(enemy.minValue, enemy.maxValue, enemy.IsPlayerNear(enemy.raycasts[0], enemy.raycasts[1], enemy.raycasts[2], enemy.raycasts[3]), enemy.moveSpeed, enemy.movePoint);
                 }
                 enemiesMoving = true;
             }
