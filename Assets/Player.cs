@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Player : MonoBehaviour
@@ -10,7 +8,7 @@ public class Player : MonoBehaviour
 
     public int minValue;
     public int maxValue;
-    public float moveDistance= 2;
+    public float moveDistance = 2;
 
     public Transform movePoint;
 
