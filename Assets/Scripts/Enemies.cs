@@ -1,24 +1,32 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AddressableAssets;
 
-public class Enemies : MonoBehaviour
+public abstract class Enemies : MonoBehaviour
 {
     public int health = 10;
 
-    public float moveSpeed = 1f;
+    private int moveDistance;
 
-    public int minValue = 1;
-    public int maxValue = 2;
-    private float moveDistance;
+    [SerializeField]
+    private int minValue, maxValue;
+
+    [SerializeField]
+    private float raycastLength;
+
+    [Range(0, 20)]
+    public float moveSpeed;
 
     public bool isPlayerNear = false, isMoving = false;
 
-    public Transform UpRaycast, DownRaycast, RightRaycast, LeftRaycast, movePoint;
+    public Transform movePoint;
 
-    public Player player;
+    public List<Transform> raycasts = new List<Transform>();
 
-    public bool actionWaTaken = false;
+    private Player player;
+
+    //public bool actionWaTaken = false;
 
     private void Start()
     {
@@ -27,18 +35,19 @@ public class Enemies : MonoBehaviour
         player = GameObject.Find("Player").GetComponent<Player>();
     }
 
+    // Sprawdza, czy gracz jest w pobli¿u by mog³ zadaæ damage. Plan jest by przerobiæ to w strzalanie
     public bool IsPlayerNear(Transform UpRaycast, Transform DownRaycast, Transform RightRaycast, Transform LeftRaycast)
     {
-        if (Physics2D.Raycast(UpRaycast.position, Vector3.up, 10))
+        if (Physics2D.Raycast(UpRaycast.position, Vector3.up, raycastLength))
             return true;
 
-        if (Physics2D.Raycast(DownRaycast.position, Vector3.down, 10))
+        if (Physics2D.Raycast(DownRaycast.position, Vector3.down, raycastLength))
             return true;
 
-        if (Physics2D.Raycast(RightRaycast.position, Vector3.right, 10))
+        if (Physics2D.Raycast(RightRaycast.position, Vector3.right, raycastLength))
             return true;
 
-        if (Physics2D.Raycast(LeftRaycast.position, Vector3.left, 10))
+        if (Physics2D.Raycast(LeftRaycast.position, Vector3.left, raycastLength))
             return true;
 
         return false;
@@ -46,27 +55,35 @@ public class Enemies : MonoBehaviour
 
     private void FixedUpdate()
     {
-        isPlayerNear = IsPlayerNear(UpRaycast, DownRaycast, RightRaycast, LeftRaycast);
+        // Nie potrzebne, tylko do Debugowania
+        isPlayerNear = IsPlayerNear(raycasts[0], raycasts[1], raycasts[2], raycasts[3]);
     }
 
     public void TakeAction(int minValue, int maxValue, bool isPlayerNear, float moveSpeed, Transform movePoint)
     {
-        moveDistance = Random.Range(minValue, maxValue);
-
+        //Losuje pomiedzy atakiem i poruszanie sie
         switch (Random.Range(0, 2))
         {
             case 0:
                 if (isPlayerNear)
                 {
-                    player.health = player.TakeDamage(player.health, 1);
+                    Attack();
                 }
                 break;
             case 1:
+                moveDistance = Random.Range(minValue, maxValue);
                 isMoving = true;
                 StartCoroutine(Move(moveSpeed, movePoint));
                 break;
-
         }
+    }
+
+    // Raczej glowna roznica pomiedzy przeciwnikami bedzie rodzaj ataku. Pomysl jest by przeciwnicy dziedziczyli ta klasa
+    // i uzywali public override Attack() {}, oraz zmieniali zmienne w inspectorze by rzuczali innymi koscmi. Przyklad w BasicEnemy
+    public virtual void Attack()
+    {
+        //Instantiate(Addressables.LoadAssetAsync<GameObject>("Bullet").WaitForCompletion(), transform.position, Quaternion.identity);
+        player.health = player.TakeDamage(player.health, 1);
     }
 
     public IEnumerator Move(float moveSpeed, Transform movePoint)
@@ -75,11 +92,14 @@ public class Enemies : MonoBehaviour
 
         if (Vector3.Distance(transform.position, movePoint.position) == 0)
         {
+            // Porusza sie dopoki nie wyczerpie mu sie wylosowana odleglosc
             if (moveDistance == 0)
             {
                 isMoving = false;
                 yield break;
             }
+
+            //Zmienne do zmienienia, gdy bedzie znana odlegloc pomiedzy kwadratami
 
             switch (Random.Range(1, 4))
             {

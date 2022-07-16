@@ -7,19 +7,21 @@ public class Player : MonoBehaviour
 {
     public int health = 10;
 
-    public float moveSpeed = 1f;
+    [SerializeField]
+    [Range(0, 20)]
+    private float moveSpeed = 1f;
 
-    public int minValue;
-    public int maxValue;
-    public float moveDistance= 2;
-
-    public Transform movePoint;
+    [SerializeField]
+    private int minValue, maxValue, moveDistance;
 
     [SerializeField]
     private string actionTaken = "None";
 
+    private Transform movePoint;
+
     private void Awake()
     {
+        movePoint = transform.GetChild(0).transform;
         movePoint.parent = null;
     }
 
