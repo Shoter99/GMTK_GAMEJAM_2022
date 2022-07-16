@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class BulletScript : MonoBehaviour
+public sealed class BulletScript : MonoBehaviour
 {
     [SerializeField]
     private float moveSpeed;

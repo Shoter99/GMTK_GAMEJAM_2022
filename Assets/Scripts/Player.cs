@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 
-public class Player : MonoBehaviour
+public sealed class Player : MonoBehaviour
 {
     public int health = 10;
 
@@ -37,7 +37,7 @@ public class Player : MonoBehaviour
         if (!valueIsRolled)
         {
             valueIsRolled = true;
-            valueRolled = RollAValue(minValue, maxValue + 1);
+            valueRolled = RollAValue(minValue, maxValue);
         }
 
         switch (actionTaken)
@@ -219,7 +219,7 @@ public class Player : MonoBehaviour
 
     private int Heal(int health) => health + valueRolled;
 
-    public int RollAValue(int minValue, int maxValue) => Random.Range(minValue, maxValue);
+    public int RollAValue(int minValue, int maxValue) => Random.Range(minValue, maxValue + 1);
 
     public int TakeDamage(int health, int amount) => health -= amount;
 }

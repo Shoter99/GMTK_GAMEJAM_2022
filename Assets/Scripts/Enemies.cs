@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.AddressableAssets;
 
 public abstract class Enemies : MonoBehaviour
 {
@@ -25,7 +24,6 @@ public abstract class Enemies : MonoBehaviour
 
     public Player player;
 
-    //public bool actionWaTaken = false;
 
     private void Start()
     {
@@ -125,4 +123,6 @@ public abstract class Enemies : MonoBehaviour
     }
 
     public int TakeDamage(int health, int amount) => health -= amount;
+
+    public int RollNumber(int minValue, int maxValue) => Random.Range(minValue, maxValue + 1);
 }

@@ -26,7 +26,7 @@ public class FireEnemy : Enemies
                 break;
         }
 
-        bullet.GetComponent<BulletScript>().strength = Random.Range(minValue, maxValue + 1);
+        bullet.GetComponent<BulletScript>().strength = RollNumber(minValue, maxValue);
         bullet.GetComponent<BulletScript>().owner = gameObject;
     }
 }
