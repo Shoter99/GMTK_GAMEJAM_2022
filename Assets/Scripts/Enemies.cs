@@ -128,4 +128,6 @@ public abstract class Enemies : MonoBehaviour
     {
         EnemyManager.Instance.enemies.Remove(this);
     }
+
+    public int TakeDamage(int health, int amount) => health -= amount;
 }

@@ -10,6 +10,9 @@ public class BulletScript : MonoBehaviour
     [HideInInspector]
     public string direction;
 
+    [HideInInspector]
+    public int strength;
+
     void Awake()
     {
         //transform.LookAt(Input.mousePosition);
