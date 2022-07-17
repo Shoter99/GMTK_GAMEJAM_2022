@@ -8,5 +8,8 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/UI/MainMenu.unity
     guid: 4cdc310b06b64b74cba33eeb1aae5a1f
+  - enabled: 1
+    path: Assets/MapGeneration/Scenes/TestScene.unity
+    guid: cef596fcd216291478dd8c66832552d5
   m_configObjects:
     com.unity.addressableassets: {fileID: 11400000, guid: 49b200dcfc6fe5a4c888a38f8d025dcb, type: 2}
