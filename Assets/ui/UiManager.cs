@@ -1,0 +1,77 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine; 
+using TMPro;
+
+public class UiManager : MonoBehaviour
+{
+
+
+    public int health = 10;
+    public int minValue = 1;
+    // order of dices: melee, ranged, reposition, heal, defense
+    public GameObject[] diceParents = {};
+    public int[] diceCounts = new int[5];
+    public Animator[,] diceAnims = new Animator[5,3]; 
+
+
+
+    void Start()
+    {
+        for (int i = 0; i < 5; i++)
+        {
+            diceCounts[i] = diceParents[i].transform.childCount;
+            for (int j = 0; j < diceCounts[i]; j++)
+            {
+                diceAnims[i,j] = diceParents[i].transform.GetChild(j).GetChild(0).gameObject.GetComponent<Animator>();
+ 
+            }
+        }
+    }
+
+//reroll takes [5,3] array of numbers to show on dices
+    void reroll(int [,] diceValues){
+        for (int i = 0; i < 5; i++)
+        {
+            for (int j = 0; j < diceCounts[i]; j++)
+            {
+                Debug.Log("rerolling dice " + i + " " + j + " dice values" + diceValues[i,j].ToString());
+                diceParents[i].transform.GetChild(j).GetChild(0).GetComponent<Animator>().Play(diceValues[i,j].ToString());
+                //diceAnims[i,j].Play(diceValues[i,j].ToString());   
+            }
+        }
+        for (int i = 0; i < 5; i++)
+        {
+            for (int j = 0; j < diceCounts[i]; j++)
+            {
+                Animator anim = diceParents[i].transform.GetChild(j).GetComponent<Animator>();
+                anim.Play("revealDice");
+            }
+        }
+    }
+
+    void add_dice(int diceType)
+    {
+        diceCounts[diceType]++;
+        int diceIndex = diceCounts[diceType] - 1;
+        GameObject newDice = Instantiate(diceParents[diceType].transform.GetChild(0).gameObject, diceParents[diceType].transform);
+        newDice.transform.localPosition = new Vector3(0,-100 * diceCounts[diceType],0);
+        newDice.transform.localScale = new Vector3(1,1,1);
+        diceAnims[diceType,diceIndex] =  newDice.GetComponent<Animator>();
+        //return diceAnims;
+
+
+    }
+
+    void Update()
+    {
+        
+    }
+    void updateHealth()
+    {
+        if (health <= 0)
+        {
+            health = 0;
+        }   
+    }
+}
