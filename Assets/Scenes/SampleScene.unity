@@ -187,10 +187,10 @@ MonoBehaviour:
   health: 10
   minValue: 1
   maxValue: 4
-  raycastLength: 2
+  rolledValue: 0
   moveSpeed: 2
-  playerNear: 0
   isMoving: 0
+  raycastLength: 2
   movePoint: {fileID: 580546170}
   raycasts:
   - {fileID: 1259962828}
@@ -285,7 +285,7 @@ BoxCollider2D:
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 0.16, y: 0.16}
+    oldSize: {x: 1, y: 1}
     newSize: {x: 1, y: 1}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
@@ -328,10 +328,10 @@ MonoBehaviour:
   health: 10
   minValue: 2
   maxValue: 4
-  raycastLength: 0
+  rolledValue: 0
   moveSpeed: 2
-  playerNear: 0
   isMoving: 0
+  raycastLength: 0
   movePoint: {fileID: 1336330884}
   raycasts:
   - {fileID: 1276853162}
@@ -339,6 +339,8 @@ MonoBehaviour:
   - {fileID: 1135841116}
   - {fileID: 1429503362}
   player: {fileID: 0}
+  bulletExists: 0
+  bulletFiredThisTurn: 0
 --- !u!61 &66440362
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -585,7 +587,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0ec00e5d94461264b900474a1e04975a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  enemies: []
+  meleeEnemies: []
+  rangeEnemies: []
+  minerEnemies: []
+  phase: None
 --- !u!114 &300501707
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -908,7 +913,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   health: 10
+  actionsLeft: 2
+  damageResistanceStrength: 0
+  shieldDurabality: 0
   valueIsRolled: 0
+  bulletExists: 0
   moveSpeed: 2
   minValue: 1
   maxValue: 6
@@ -1006,7 +1015,7 @@ BoxCollider2D:
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 0.16, y: 0.16}
+    oldSize: {x: 1, y: 1}
     newSize: {x: 1, y: 1}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
@@ -1349,10 +1358,10 @@ MonoBehaviour:
   health: 10
   minValue: 1
   maxValue: 4
-  raycastLength: 2
+  rolledValue: 0
   moveSpeed: 2
-  playerNear: 0
   isMoving: 0
+  raycastLength: 2
   movePoint: {fileID: 1719055659}
   raycasts:
   - {fileID: 628244625}
@@ -1447,7 +1456,7 @@ BoxCollider2D:
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 0.16, y: 0.16}
+    oldSize: {x: 1, y: 1}
     newSize: {x: 1, y: 1}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
@@ -1580,10 +1589,10 @@ MonoBehaviour:
   health: 10
   minValue: 2
   maxValue: 4
-  raycastLength: 0
+  rolledValue: 0
   moveSpeed: 2
-  playerNear: 0
   isMoving: 0
+  raycastLength: 0
   movePoint: {fileID: 675062006}
   raycasts:
   - {fileID: 126924121}
@@ -1591,6 +1600,8 @@ MonoBehaviour:
   - {fileID: 1003810454}
   - {fileID: 1248040782}
   player: {fileID: 0}
+  bulletExists: 0
+  bulletFiredThisTurn: 0
 --- !u!212 &1831738283
 SpriteRenderer:
   m_ObjectHideFlags: 0
