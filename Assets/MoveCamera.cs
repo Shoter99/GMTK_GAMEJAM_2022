@@ -11,7 +11,6 @@ public class MoveCamera : MonoBehaviour
     {
         float posX = transform.position.x - player.transform.position.x;
         float posY = transform.position.y - player.transform.position.y;
-        print(posX);
         Vector3 newPos = transform.position;
         if(posX >= 5)
         {

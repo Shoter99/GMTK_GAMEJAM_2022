@@ -15,7 +15,7 @@ public class UiManager : MonoBehaviour
     public int[] diceCounts = new int[5];
     public Animator[,] diceAnims = new Animator[5,3];
     public int[] selected = {7,7};
-    public int selectedCount = 0;
+    public bool isSelected = false;
 
 
     private void Awake()
@@ -77,16 +77,12 @@ public class UiManager : MonoBehaviour
 
     public void receiveClickedAction(GameObject icon){
         for (int i = 0; i<5; i++){
-            if (icon == diceParents[i]){
-                selected[selectedCount] = i;
-                if (selectedCount == 1){
-                    //here two actions are selected, stored in variable selected as numbers 0-4 respectively with order of which icons are displayed from left to right
-                    SetAction(i);
-                    selectedCount = 2;
-                }
+            if (icon == diceParents[i])
+            {
+                SetAction(i);
                 break;
             }
-            
+            //here two actions are selected, stored in variable selected as numbers 0-4 respectively with order of which icons are displayed from left to right
         }
     }
 
@@ -122,12 +118,16 @@ public class UiManager : MonoBehaviour
         for(int i = 0; i<5; i++){
             diceParents[i].GetComponent<clickTriggered>().unclick();
         }
-
-        selected[0] = 7;
-        selected[1] = 7;
+        Debug.Log(diceParents[2]);
         
     }
-
+    private void LateUpdate()
+    {
+        if(Player.Instance.actionTaken == "None")
+        {
+            removeSelected();
+        }
+    }
     public void updateHealth(int health)
     {
         health = 20 - health;

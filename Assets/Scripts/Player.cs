@@ -352,7 +352,7 @@ public sealed class Player : MonoBehaviour
 
     private void Heal()
     {
-        health += (int)Mathf.Floor(healValue * 1.5f);
+        health += healValue;
         UiManager.Instance.updateHealth(health);
         healValue = 0;
         valueIsRolled = false;

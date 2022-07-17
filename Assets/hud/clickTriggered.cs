@@ -7,41 +7,37 @@ public class clickTriggered : MonoBehaviour
 {
     public GameObject EventSystem = null;
     public bool isClicked;
-    public UiManager receiver;
 
     
     void Start() 
     {
-        receiver = EventSystem.GetComponent<UiManager>();
         this.GetComponent<Animator>().Play("unclicked");
         isClicked = false;
-        receiver.selectedCount = 0;  
 
 
     }
 
 
     public void clicked(){
+        if (UiManager.Instance.isSelected) return;
         Debug.Log(isClicked);
         if (isClicked) {
             this.unclick();
         }
         else {
-            if (receiver.selectedCount < 2) {
+            UiManager.Instance.isSelected = true;
             this.GetComponent<Animator>().Play("clicked");
             this.isClicked = true;
-            receiver.receiveClickedAction(this.gameObject);
-            receiver.selectedCount++;
-
-            }
+            UiManager.Instance.receiveClickedAction(this.gameObject);
         }
     }
 
     public void unclick(){
+        //if (UiManager.Instance.isSelected) return;
         if (isClicked){
             this.GetComponent<Animator>().Play("unclicked");
-            receiver.selectedCount--;
             isClicked = false;
+            UiManager.Instance.isSelected = false;
         }        
     }
 }
