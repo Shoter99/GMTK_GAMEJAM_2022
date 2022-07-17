@@ -23,8 +23,7 @@ public sealed class Player : MonoBehaviour
 
     public Dictionary<string, int> values = new Dictionary<string, int>();
 
-    [SerializeField]
-    private string actionTaken = "None";
+    public string actionTaken = "None";
 
     private readonly List<Transform> raycasts = new List<Transform>();
 
@@ -63,7 +62,7 @@ public sealed class Player : MonoBehaviour
             
             int[,] diceValues = { { meleeValue, 0, 0 }, { fireValue, 0, 0 }, { moveValue, 0, 0 }, { healValue, 0, 0 }, { defendValue, 0, 0 } };
 
-            UiManager.Instance.reroll(diceValues);
+            //UiManager.Instance.reroll(diceValues);
 
             //GameObject.Find("RepositionIcon").transform.GetChild(0).transform.GetChild(0).
             

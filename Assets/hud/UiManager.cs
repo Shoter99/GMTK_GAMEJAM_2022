@@ -72,13 +72,42 @@ public class UiManager : MonoBehaviour
         for (int i = 0; i<5; i++){
             if (icon == diceParents[i]){
                 selected[selectedCount] = i;
-                if (selectedCount == 2){
+                if (selectedCount == 1){
                     //here two actions are selected, stored in variable selected as numbers 0-4 respectively with order of which icons are displayed from left to right
+                    SetAction(i);
                     selectedCount = 2;
                 }
                 break;
             }
             
+        }
+    }
+
+    private void SetAction(int i)
+    {
+        Debug.Log("Test");
+        switch (i)
+        {
+            case 0:
+                Debug.Log(i);
+                Player.Instance.actionTaken = "Melee";
+                break;
+            case 1:
+                Debug.Log(i);
+                Player.Instance.actionTaken = "Fire";
+                break;
+            case 2:
+                Debug.Log(i);
+                Player.Instance.actionTaken = "Move";
+                break;
+            case 3:
+                Debug.Log(i);
+                Player.Instance.actionTaken = "Heal";
+                break;
+            case 4:
+                Debug.Log(i);
+                Player.Instance.actionTaken = "Defend";
+                break;
         }
     }
 
