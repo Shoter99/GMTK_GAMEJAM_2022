@@ -44,4 +44,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   enemyList:
-  - {fileID: 6687775743321917091, guid: 5281ed0506906304b8a4cb1415ff9bd6, type: 3}
+  - {fileID: 2038948710213985061, guid: 0dc1db8d520dbb3418c58c331c5dda8a, type: 3}
+  - {fileID: 2037698671429926375, guid: 802cac95d5dfb2243b1bca8bb1dc67f9, type: 3}
+  - {fileID: 1809666507514545976, guid: 130d09873068c8f40842b99454f06cb2, type: 3}
+  - {fileID: 8511688416805300210, guid: 2cf3e0f7ed26a494b9690e9a634a4295, type: 3}
+  - {fileID: 6013051750597556682, guid: b33ae34625eda4c46a87792e82e76cfc, type: 3}

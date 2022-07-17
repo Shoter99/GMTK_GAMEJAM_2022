@@ -744,6 +744,7 @@ GameObject:
   - component: {fileID: 1332222422}
   - component: {fileID: 1332222421}
   - component: {fileID: 1332222420}
+  - component: {fileID: 1332222425}
   m_Layer: 6
   m_Name: Camera
   m_TagString: Enemy
@@ -899,6 +900,14 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!81 &1332222425
+AudioListener:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1332222419}
+  m_Enabled: 1
 --- !u!1 &1332262044
 GameObject:
   m_ObjectHideFlags: 0
