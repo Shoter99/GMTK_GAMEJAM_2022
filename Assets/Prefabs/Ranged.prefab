@@ -191,14 +191,16 @@ MonoBehaviour:
   minValue: 2
   maxValue: 4
   rolledValue: 0
+  storedValue: 0
   moveSpeed: 2
   isMoving: 0
+  bulletExists: 0
   raycastLength: 1
   movePoint: {fileID: 0}
   raycasts: []
   player: {fileID: 0}
-  bulletExists: 0
   bulletFiredThisTurn: 0
+  newBullet: {fileID: 4262145710968133333, guid: ef49e57d75cd3d9478ee01f50140bd96, type: 3}
 --- !u!1 &2465354618146822501
 GameObject:
   m_ObjectHideFlags: 0

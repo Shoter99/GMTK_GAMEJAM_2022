@@ -36,6 +36,9 @@ public sealed class Player : MonoBehaviour
 
     private Transform movePoint;
 
+    public GameObject newBullet;
+
+    public GameObject newMelee;
 
 
 
@@ -238,7 +241,7 @@ public sealed class Player : MonoBehaviour
     {
         if (Input.GetAxisRaw("Horizontal") == 1f)
         {
-            GameObject bullet = Instantiate(Addressables.LoadAssetAsync<GameObject>("Bullet").WaitForCompletion(), transform.position, Quaternion.identity);
+            GameObject bullet = Instantiate(newBullet, transform.position, Quaternion.identity);
             bullet.GetComponent<BulletScript>().direction = "Right";
             bullet.GetComponent<BulletScript>().strength = fireValue;
             bullet.GetComponent<BulletScript>().owner = gameObject;
@@ -251,7 +254,7 @@ public sealed class Player : MonoBehaviour
 
         if (Input.GetAxisRaw("Horizontal") == -1f)
         {
-            GameObject bullet = Instantiate(Addressables.LoadAssetAsync<GameObject>("Bullet").WaitForCompletion(), transform.position, Quaternion.identity);
+            GameObject bullet = Instantiate(newBullet, transform.position, Quaternion.identity);
             bullet.GetComponent<BulletScript>().direction = "Left";
             bullet.GetComponent<BulletScript>().strength = fireValue;
             bullet.GetComponent<BulletScript>().owner = gameObject;
@@ -264,7 +267,7 @@ public sealed class Player : MonoBehaviour
 
         if (Input.GetAxisRaw("Vertical") == 1f)
         {
-            GameObject bullet = Instantiate(Addressables.LoadAssetAsync<GameObject>("Bullet").WaitForCompletion(), transform.position, Quaternion.identity);
+            GameObject bullet = Instantiate(newBullet, transform.position, Quaternion.identity);
             bullet.GetComponent<BulletScript>().direction = "Up";
             bullet.GetComponent<BulletScript>().strength = fireValue;
             bullet.GetComponent<BulletScript>().owner = gameObject;
@@ -277,7 +280,7 @@ public sealed class Player : MonoBehaviour
 
         if (Input.GetAxisRaw("Vertical") == -1f)
         {
-            GameObject bullet = Instantiate(Addressables.LoadAssetAsync<GameObject>("Bullet").WaitForCompletion(), transform.position, Quaternion.identity);
+            GameObject bullet = Instantiate(newBullet, transform.position, Quaternion.identity);
             bullet.GetComponent<BulletScript>().direction = "Down";
             bullet.GetComponent<BulletScript>().strength = fireValue;
             bullet.GetComponent<BulletScript>().owner = gameObject;
@@ -304,7 +307,7 @@ public sealed class Player : MonoBehaviour
 
         if (Mathf.Abs(Input.GetAxisRaw("Horizontal")) == 1f)
         {
-            GameObject melee = Instantiate(Addressables.LoadAssetAsync<GameObject>("Melee").WaitForCompletion(), transform.position, Quaternion.identity);
+            GameObject melee = Instantiate(newMelee, transform.position, Quaternion.identity);
             melee.GetComponent<BulletScript>().strength = meleeValue * 2;
             melee.GetComponent<BulletScript>().length = range;
             melee.GetComponent<BulletScript>().owner = gameObject;
@@ -328,7 +331,7 @@ public sealed class Player : MonoBehaviour
 
         if (Mathf.Abs(Input.GetAxisRaw("Vertical")) == 1f)
         {
-            GameObject melee = Instantiate(Addressables.LoadAssetAsync<GameObject>("Melee").WaitForCompletion(), transform.position, Quaternion.identity);
+            GameObject melee = Instantiate(newMelee, transform.position, Quaternion.identity);
             melee.GetComponent<BulletScript>().strength = meleeValue * 2;
             melee.GetComponent<BulletScript>().length = range;
             melee.GetComponent<BulletScript>().owner = gameObject;

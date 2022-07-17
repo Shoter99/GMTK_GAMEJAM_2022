@@ -234,6 +234,8 @@ MonoBehaviour:
   healValue: 0
   defendValue: 0
   actionTaken: Move
+  newBullet: {fileID: 4262145710968133333, guid: ef49e57d75cd3d9478ee01f50140bd96, type: 3}
+  newMelee: {fileID: 3762612020500476231, guid: 1ebe1b038422ef24390c080f5a7ea824, type: 3}
 --- !u!1 &689882722865141519
 GameObject:
   m_ObjectHideFlags: 0

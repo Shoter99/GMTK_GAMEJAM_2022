@@ -5,6 +5,8 @@ public sealed class MeleeEnemy : Enemies
 {
     public string wherePlayer;
 
+    public GameObject newMelee;
+
     private void Start()
     {
         EnemyManager.Instance.meleeEnemies.Add(this);
@@ -63,7 +65,7 @@ public sealed class MeleeEnemy : Enemies
         base.Attack();
         if (IsPlayerNear())
         {
-            GameObject melee = Instantiate(Addressables.LoadAssetAsync<GameObject>("Melee").WaitForCompletion(), transform.position, Quaternion.identity);
+            GameObject melee = Instantiate(newMelee, transform.position, Quaternion.identity);
             melee.GetComponent<BulletScript>().strength = storedValue;
             melee.GetComponent<BulletScript>().length = 1;
             melee.GetComponent<BulletScript>().owner = gameObject;

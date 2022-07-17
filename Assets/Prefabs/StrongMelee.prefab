@@ -255,13 +255,16 @@ MonoBehaviour:
   minValue: 3
   maxValue: 6
   rolledValue: 0
+  storedValue: 0
   moveSpeed: 2
   isMoving: 0
+  bulletExists: 0
   raycastLength: 1
   movePoint: {fileID: 0}
   raycasts: []
   player: {fileID: 0}
   wherePlayer: 
+  newMelee: {fileID: 3762612020500476231, guid: 1ebe1b038422ef24390c080f5a7ea824, type: 3}
 --- !u!61 &6588750448335834934
 BoxCollider2D:
   m_ObjectHideFlags: 0

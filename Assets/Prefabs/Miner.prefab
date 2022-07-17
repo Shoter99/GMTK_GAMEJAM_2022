@@ -131,12 +131,15 @@ MonoBehaviour:
   minValue: 2
   maxValue: 5
   rolledValue: 0
+  storedValue: 0
   moveSpeed: 2
   isMoving: 0
+  bulletExists: 0
   raycastLength: 1
   movePoint: {fileID: 0}
   raycasts: []
   player: {fileID: 0}
+  newMine: {fileID: 4262145710968133333, guid: 07595233fc13e104a91f28fca213cc1e, type: 3}
 --- !u!1 &2433990251157823264
 GameObject:
   m_ObjectHideFlags: 0

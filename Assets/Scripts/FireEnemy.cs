@@ -7,6 +7,8 @@ public class FireEnemy : Enemies
 
     private string playerPosition;
 
+    public GameObject newBullet;
+
     private void Start()
     {
         EnemyManager.Instance.rangeEnemies.Add(this);
@@ -69,7 +71,7 @@ public class FireEnemy : Enemies
 
         bulletExists = true;
         bulletFiredThisTurn = true;
-        GameObject bullet = Instantiate(Addressables.LoadAssetAsync<GameObject>("Bullet").WaitForCompletion(), transform.position, Quaternion.identity);
+        GameObject bullet = Instantiate(newBullet, transform.position, Quaternion.identity);
 
         switch (playerPosition)
         {

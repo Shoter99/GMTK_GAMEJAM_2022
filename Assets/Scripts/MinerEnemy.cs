@@ -5,6 +5,8 @@ public sealed class MinerEnemy : Enemies
 {
     private bool onASquare = true;
 
+    public GameObject newMine;
+
     private void Start()
     {
         EnemyManager.Instance.minerEnemies.Add(this);
@@ -23,7 +25,7 @@ public sealed class MinerEnemy : Enemies
             
             if (Random.Range(1, 6) == 1)
             {
-                GameObject mine = Instantiate(Addressables.LoadAssetAsync<GameObject>("Mine").WaitForCompletion(), transform.position, Quaternion.identity);
+                GameObject mine = Instantiate(newMine, transform.position, Quaternion.identity);
                 mine.GetComponent<Mine>().strength = RollNumber(minValue, maxValue);
             }
         }
