@@ -227,7 +227,7 @@ MonoBehaviour:
   minValue: 1
   maxValue: 6
   valueRolled: 0
-  actionTaken: None
+  actionTaken: Move
 --- !u!1 &689882722865141519
 GameObject:
   m_ObjectHideFlags: 0
