@@ -6,13 +6,10 @@ public sealed class Player : MonoBehaviour
 {
     public static Player Instance { get; private set; }
 
-    [Range(0, 20)]
-    public int health = 15;
-
-    public int actionsLeft;
-
-    [HideInInspector]
-    public int damageResistanceStrength = 0, shieldDurability = 0;
+    public int health = 10;
+    public int actionsLeft = 2;
+    public int damageResistanceStrength = 0;
+    public int shieldDurabality = 0;
 
     public bool valueIsRolled = false, bulletExists = false;
 
@@ -89,7 +86,9 @@ public sealed class Player : MonoBehaviour
         {
             if (valueRolled == 0)
             {
-                PrepereForNextAction();
+                valueIsRolled = false;
+                actionsLeft--;
+                actionTaken = "None";
                 return;
             }
 
@@ -182,76 +181,58 @@ public sealed class Player : MonoBehaviour
     {
         if (Input.GetAxisRaw("Horizontal") == 1f)
         {
-            SpawnBullet().GetComponent<BulletScript>().direction = "Right";
-            PrepereForNextAction();
+            GameObject bullet = Instantiate(Addressables.LoadAssetAsync<GameObject>("Bullet").WaitForCompletion(), transform.position, Quaternion.identity);
+            bullet.GetComponent<BulletScript>().direction = "Right";
+            bullet.GetComponent<BulletScript>().strength = valueRolled;
+            bullet.GetComponent<BulletScript>().owner = gameObject;
+            actionTaken = "None";
+            valueRolled = 0;
+            valueIsRolled = false;
+            bulletExists = true;
+            actionsLeft--;
         }
 
         if (Input.GetAxisRaw("Horizontal") == -1f)
         {
-            SpawnBullet().GetComponent<BulletScript>().direction = "Left";
-            PrepereForNextAction();
+            GameObject bullet = Instantiate(Addressables.LoadAssetAsync<GameObject>("Bullet").WaitForCompletion(), transform.position, Quaternion.identity);
+            bullet.GetComponent<BulletScript>().direction = "Left";
+            bullet.GetComponent<BulletScript>().strength = valueRolled;
+            bullet.GetComponent<BulletScript>().owner = gameObject;
+            actionTaken = "None";
+            valueRolled = 0;
+            valueIsRolled = false;
+            bulletExists = true;
+            actionsLeft--;
         }
 
         if (Input.GetAxisRaw("Vertical") == 1f)
         {
-            SpawnBullet().GetComponent<BulletScript>().direction = "Up";
-            PrepereForNextAction();
+            GameObject bullet = Instantiate(Addressables.LoadAssetAsync<GameObject>("Bullet").WaitForCompletion(), transform.position, Quaternion.identity);
+            bullet.GetComponent<BulletScript>().direction = "Up";
+            bullet.GetComponent<BulletScript>().strength = valueRolled;
+            bullet.GetComponent<BulletScript>().owner = gameObject;
+            actionTaken = "None";
+            valueRolled = 0;
+            valueIsRolled = false;
+            bulletExists = true;
+            actionsLeft--;
         }
 
         if (Input.GetAxisRaw("Vertical") == -1f)
         {
-            SpawnBullet().GetComponent<BulletScript>().direction = "Down";
-            PrepereForNextAction();
+            GameObject bullet = Instantiate(Addressables.LoadAssetAsync<GameObject>("Bullet").WaitForCompletion(), transform.position, Quaternion.identity);
+            bullet.GetComponent<BulletScript>().direction = "Down";
+            bullet.GetComponent<BulletScript>().strength = valueRolled;
+            bullet.GetComponent<BulletScript>().owner = gameObject;
+            actionTaken = "None";
+            valueRolled = 0;
+            valueIsRolled = false;
+            bulletExists = true;
+            actionsLeft--;
         }
-    }
-
-    private GameObject SpawnBullet()
-    {
-        GameObject bullet = Instantiate(Addressables.LoadAssetAsync<GameObject>("Bullet").WaitForCompletion(), transform.position, Quaternion.identity);
-        bullet.GetComponent<BulletScript>().direction = "Right";
-        bullet.GetComponent<BulletScript>().strength = valueRolled;
-        bullet.GetComponent<BulletScript>().owner = gameObject;
-        bulletExists = true;
-        return bullet;
     }
 
     private void MeleeAttack()
-    {
-
-
-        if (Mathf.Abs(Input.GetAxisRaw("Horizontal")) == 1f)
-        {
-            switch (Input.GetAxisRaw("Horizontal"))
-            {
-                case 1f:
-                    SpawnMelee().GetComponent<BulletScript>().direction = "Right";
-                    break;
-                case -1f:
-                    SpawnMelee().GetComponent<BulletScript>().direction = "Left";
-                    break;
-            }
-
-            PrepereForNextAction();
-        }
-
-        if (Mathf.Abs(Input.GetAxisRaw("Vertical")) == 1f)
-        {
-
-            switch (Input.GetAxisRaw("Vertical"))
-            {
-                case 1f:
-                    SpawnMelee().GetComponent<BulletScript>().direction = "Up";
-                    break;
-                case -1f:
-                    SpawnMelee().GetComponent<BulletScript>().direction = "Down";
-                    break;
-            }
-
-            PrepereForNextAction();
-        }
-    }
-
-    private GameObject SpawnMelee()
     {
         int range;
 
@@ -264,29 +245,69 @@ public sealed class Player : MonoBehaviour
             range = 1;
         }
 
-        GameObject melee = Instantiate(Addressables.LoadAssetAsync<GameObject>("Melee").WaitForCompletion(), transform.position, Quaternion.identity);
-        melee.GetComponent<BulletScript>().strength = valueRolled * 2;
-        melee.GetComponent<BulletScript>().length = range;
-        melee.GetComponent<BulletScript>().owner = gameObject;
-        bulletExists = true;
-        return melee;
+        if (Mathf.Abs(Input.GetAxisRaw("Horizontal")) == 1f)
+        {
+            GameObject melee = Instantiate(Addressables.LoadAssetAsync<GameObject>("Melee").WaitForCompletion(), transform.position, Quaternion.identity);
+            melee.GetComponent<BulletScript>().strength = valueRolled*2;
+            melee.GetComponent<BulletScript>().length = range;
+            melee.GetComponent<BulletScript>().owner = gameObject;
+
+            switch (Input.GetAxisRaw("Horizontal"))
+            {
+                case 1f:
+                    melee.GetComponent<BulletScript>().direction = "Right";
+                    break;
+                case -1f:
+                    melee.GetComponent<BulletScript>().direction = "Left";
+                    break;
+            }
+
+            bulletExists = true;
+            valueRolled = 0;
+            valueIsRolled = false;
+            actionTaken = "None";
+            actionsLeft--;
+        }
+
+        if (Mathf.Abs(Input.GetAxisRaw("Vertical")) == 1f)
+        {
+            GameObject melee = Instantiate(Addressables.LoadAssetAsync<GameObject>("Melee").WaitForCompletion(), transform.position, Quaternion.identity);
+            melee.GetComponent<BulletScript>().strength = valueRolled*2;
+            melee.GetComponent<BulletScript>().length = range;
+            melee.GetComponent<BulletScript>().owner = gameObject;
+
+            switch (Input.GetAxisRaw("Vertical"))
+            {
+                case 1f:
+                    melee.GetComponent<BulletScript>().direction = "Up";
+                    break;
+                case -1f:
+                    melee.GetComponent<BulletScript>().direction = "Down";
+                    break;
+            }
+
+            bulletExists = true;
+            valueRolled = 0;
+            valueIsRolled = false;
+            actionTaken = "None";
+            actionsLeft--;
+        }
+
     }
 
     private void Heal()
     {
         health += (int)Mathf.Floor(valueRolled * 1.5f);
-        PrepereForNextAction();
+        valueRolled = 0;
+        valueIsRolled = false;
+        actionTaken = "None";
+        actionsLeft--;
     }
     
     private void Defend()
     {
-        shieldDurability = 2;
+        shieldDurabality = 2;
         damageResistanceStrength = valueRolled;
-        PrepereForNextAction();
-    }
-
-    private void PrepereForNextAction()
-    {
         actionTaken = "None";
         actionsLeft--;
         valueRolled = 0;
@@ -297,7 +318,7 @@ public sealed class Player : MonoBehaviour
 
     public void TakeDamage(int amount)
     {
-        if (shieldDurability <= 0)
+        if (shieldDurabality <= 0)
         {
             health -= amount;
         }
@@ -309,7 +330,7 @@ public sealed class Player : MonoBehaviour
             }
             else
             {
-                shieldDurability--;
+                shieldDurabality--;
             }
         }
     }
