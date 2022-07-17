@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 
-public class MinerEnemy : Enemies
+public sealed class MinerEnemy : Enemies
 {
     private bool onASquare = false;
 
@@ -26,6 +26,8 @@ public class MinerEnemy : Enemies
                 GameObject mine = Instantiate(Addressables.LoadAssetAsync<GameObject>("Mine").WaitForCompletion(), transform.position, Quaternion.identity);
                 mine.GetComponent<Mine>().strength = RollNumber(minValue, maxValue);
             }
+
+            onASquare = false;
         }
     }
 }
