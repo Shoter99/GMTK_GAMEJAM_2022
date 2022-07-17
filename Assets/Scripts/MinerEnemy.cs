@@ -26,8 +26,13 @@ public sealed class MinerEnemy : Enemies
                 GameObject mine = Instantiate(Addressables.LoadAssetAsync<GameObject>("Mine").WaitForCompletion(), transform.position, Quaternion.identity);
                 mine.GetComponent<Mine>().strength = RollNumber(minValue, maxValue);
             }
-
-            onASquare = false;
+        }
+        else
+        {
+            if (Vector3.Distance(transform.position, movePoint.position) != 0)
+            {
+                onASquare = false;
+            }
         }
     }
 }

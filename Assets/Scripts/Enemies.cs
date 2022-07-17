@@ -58,8 +58,39 @@ public abstract class Enemies : MonoBehaviour
 
         if (Vector3.Distance(transform.position, movePoint.position) == 0)
         {
+
             if (rolledValue == 0)
             {
+                foreach (MeleeEnemy enemy in EnemyManager.Instance.meleeEnemies)
+                { 
+                    if(enemy.transform.position == transform.position && enemy.gameObject != gameObject)
+                    {
+                        rolledValue++;
+                        StartCoroutine(Move());
+                        yield break;
+                    }
+                }
+
+                foreach (FireEnemy enemy in EnemyManager.Instance.rangeEnemies)
+                {
+                    if (enemy.transform.position == transform.position && enemy.gameObject != gameObject)
+                    {
+                        rolledValue++;
+                        StartCoroutine(Move());
+                        yield break;
+                    }
+                }
+
+                foreach (MinerEnemy enemy in EnemyManager.Instance.minerEnemies)
+                {
+                    if (enemy.transform.position == transform.position && enemy.gameObject != gameObject)
+                    {
+                        rolledValue++;
+                        StartCoroutine(Move());
+                        yield break;
+                    }
+                }
+
                 isMoving = false;
                 yield break;
             }

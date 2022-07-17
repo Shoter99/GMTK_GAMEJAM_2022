@@ -8,7 +8,6 @@ public sealed class MeleeEnemy : Enemies
     private void Start()
     {
         EnemyManager.Instance.meleeEnemies.Add(this);
-        Debug.Log("Test");
     }
 
     private void OnDestroy()
