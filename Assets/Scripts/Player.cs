@@ -9,7 +9,7 @@ public sealed class Player : MonoBehaviour
 
     [Range(0, 10)]
     public int health = 10;
-    public int actionsLeft = 2;
+    public int actionsLeft = 1;
     public int damageResistanceStrength = 0;
     public int shieldDurabality = 0;
 

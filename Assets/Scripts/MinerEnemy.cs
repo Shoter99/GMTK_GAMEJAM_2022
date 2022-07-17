@@ -3,7 +3,7 @@ using UnityEngine.AddressableAssets;
 
 public sealed class MinerEnemy : Enemies
 {
-    private bool onASquare = false;
+    private bool onASquare = true;
 
     private void Start()
     {
