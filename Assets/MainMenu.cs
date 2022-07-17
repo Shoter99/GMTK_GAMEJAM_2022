@@ -18,13 +18,13 @@ public class MainMenu : MonoBehaviour
     }
     public void ToggleSettings()
     {
-        main.active = false;
-        settings.active = true;
+        main.SetActive(false);
+        settings.SetActive(true);
     }
     public void GoBack()
     {
-        main.active = true;
-        settings.active = false;
+        main.SetActive(true);
+        settings.SetActive(false);
     }
     public void Toggle_Fullscreen(bool isToggled)
     {
