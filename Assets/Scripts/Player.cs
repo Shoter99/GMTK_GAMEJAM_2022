@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
+using UnityEngine.UI;
 
 public sealed class Player : MonoBehaviour
 {
@@ -13,6 +14,10 @@ public sealed class Player : MonoBehaviour
 
     public bool valueIsRolled = false, bulletExists = false;
 
+
+    public Sprite[] diceSprites;
+    public Image[] dices;
+
     [SerializeField]
     [Range(0, 20)]
     private float moveSpeed = 1f;
@@ -23,12 +28,13 @@ public sealed class Player : MonoBehaviour
 
     public Dictionary<string, int> values = new Dictionary<string, int>();
 
-    [SerializeField]
-    private string actionTaken = "None";
+    public string actionTaken = "None";
 
     private readonly List<Transform> raycasts = new List<Transform>();
 
     private Transform movePoint;
+
+
 
 
     private void Awake()
@@ -63,9 +69,14 @@ public sealed class Player : MonoBehaviour
             
             int[,] diceValues = { { meleeValue, 0, 0 }, { fireValue, 0, 0 }, { moveValue, 0, 0 }, { healValue, 0, 0 }, { defendValue, 0, 0 } };
 
-            UiManager.Instance.reroll(diceValues);
+            //UiManager.Instance.reroll(diceValues);
 
-            //GameObject.Find("RepositionIcon").transform.GetChild(0).transform.GetChild(0).
+            ChangeDiceSprite(diceSprites, dices[1], moveValue);
+            ChangeDiceSprite(diceSprites, dices[1], fireValue);
+            ChangeDiceSprite(diceSprites, dices[1], meleeValue);
+            ChangeDiceSprite(diceSprites, dices[1], healValue);
+            ChangeDiceSprite(diceSprites, dices[1], defendValue);
+            
             
         }
 
@@ -92,6 +103,34 @@ public sealed class Player : MonoBehaviour
                 Defend();
                 break;
         }       
+    }
+    private void ChangeDiceSprite(Sprite[] sprite, Image img, int num)
+    {
+        print(num);
+        print(sprite);
+        print(img);
+        switch(num){
+            case 1:
+                img.sprite = sprite[0];
+                break;
+            case 2:
+                img.sprite = sprite[1];
+                break;
+            case 3:
+                img.sprite = sprite[2];
+                break;
+            case 4:
+                img.sprite = sprite[3];
+                break;
+            case 5:
+                img.sprite = sprite[4];
+                break;
+            case 6:
+                img.sprite = sprite[5];
+                break;
+                
+
+        }
     }
 
     private void Move()
