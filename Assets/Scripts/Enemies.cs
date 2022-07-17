@@ -44,6 +44,14 @@ public abstract class Enemies : MonoBehaviour
         
     }
 
+    private void LateUpdate()
+    {
+        if (health <= 0)
+        {
+            Destroy(gameObject);
+        }
+    }
+
     public IEnumerator Move()
     {
         transform.position = Vector3.MoveTowards(transform.position, movePoint.position, moveSpeed * Time.deltaTime);

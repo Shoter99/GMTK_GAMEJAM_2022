@@ -1,10 +1,14 @@
 using UnityEngine;
+using UnityEngine.AddressableAssets;
 
 public sealed class MeleeEnemy : Enemies
 {
+    public string wherePlayer;
+
     private void Start()
     {
         EnemyManager.Instance.meleeEnemies.Add(this);
+        Debug.Log("Test");
     }
 
     private void OnDestroy()
@@ -20,25 +24,37 @@ public sealed class MeleeEnemy : Enemies
 
         if (hit)
             if (hit.collider.gameObject.CompareTag("Player"))
+            {
+                wherePlayer = "Up";
                 return true;
+            }
 
         hit = Physics2D.Raycast(raycasts[1].position, Vector3.down, raycastLength);
 
         if (hit)
             if (hit.collider.gameObject.CompareTag("Player"))
+            {
+                wherePlayer = "Down";
                 return true;
+            }
 
         hit = Physics2D.Raycast(raycasts[2].position, Vector3.right, raycastLength);
 
         if (hit)
             if (hit.collider.gameObject.CompareTag("Player"))
+            {
+                wherePlayer = "Right";
                 return true;
+            }
 
         hit = Physics2D.Raycast(raycasts[3].position, Vector3.left, raycastLength);
 
         if (hit)
             if (hit.collider.gameObject.CompareTag("Player"))
+            {
+                wherePlayer = "Left";
                 return true;
+            }
 
         return false;
     }
@@ -48,7 +64,12 @@ public sealed class MeleeEnemy : Enemies
         base.Attack();
         if (IsPlayerNear())
         {
-            player.TakeDamage(rolledValue);
+            GameObject melee = Instantiate(Addressables.LoadAssetAsync<GameObject>("Melee").WaitForCompletion(), transform.position, Quaternion.identity);
+            melee.GetComponent<BulletScript>().strength = rolledValue;
+            melee.GetComponent<BulletScript>().length = 1;
+            melee.GetComponent<BulletScript>().owner = gameObject;
+            melee.GetComponent<BulletScript>().direction = wherePlayer
+;
         }
     }
 }

@@ -33,6 +33,11 @@ public sealed class Player : MonoBehaviour
         Instance = this;
         movePoint = transform.GetChild(0).transform;
         movePoint.parent = null;
+
+        for (int i = 0; i < 4; i++)
+        {
+            raycasts.Add(transform.GetChild(i).transform);
+        }
     }
 
     private void Update()
@@ -208,77 +213,54 @@ public sealed class Player : MonoBehaviour
             range = 1;
         }
 
-        if (Input.GetAxisRaw("Horizontal") == 1f)
+        if (Mathf.Abs(Input.GetAxisRaw("Horizontal")) == 1f)
         {
-            RaycastHit2D hit = Physics2D.Raycast(raycasts[2].position, Vector3.right, range);
+            GameObject melee = Instantiate(Addressables.LoadAssetAsync<GameObject>("Melee").WaitForCompletion(), transform.position, Quaternion.identity);
+            melee.GetComponent<BulletScript>().strength = valueRolled*2;
+            melee.GetComponent<BulletScript>().length = range;
+            melee.GetComponent<BulletScript>().owner = gameObject;
 
-            if (hit)
+            switch (Input.GetAxisRaw("Horizontal"))
             {
-                if (hit.collider.gameObject.CompareTag("Enemy"))
-                {
-                    hit.collider.gameObject.GetComponent<Enemies>().health = hit.collider.gameObject.GetComponent<Enemies>().TakeDamage(hit.collider.gameObject.GetComponent<Enemies>().health, valueRolled);
-                }
+                case 1f:
+                    melee.GetComponent<BulletScript>().direction = "Right";
+                    break;
+                case -1f:
+                    melee.GetComponent<BulletScript>().direction = "Left";
+                    break;
             }
 
+            bulletExists = true;
             valueRolled = 0;
             valueIsRolled = false;
             actionTaken = "None";
             actionsLeft--;
         }
 
-        if (Input.GetAxisRaw("Horizontal") == -1f)
+        if (Mathf.Abs(Input.GetAxisRaw("Vertical")) == 1f)
         {
-            RaycastHit2D hit = Physics2D.Raycast(raycasts[3].position, Vector3.left, range);
+            GameObject melee = Instantiate(Addressables.LoadAssetAsync<GameObject>("Melee").WaitForCompletion(), transform.position, Quaternion.identity);
+            melee.GetComponent<BulletScript>().strength = valueRolled*2;
+            melee.GetComponent<BulletScript>().length = range;
+            melee.GetComponent<BulletScript>().owner = gameObject;
 
-            if (hit)
+            switch (Input.GetAxisRaw("Vertical"))
             {
-                if (hit.collider.gameObject.CompareTag("Enemy"))
-                {
-                    hit.collider.gameObject.GetComponent<Enemies>().health = hit.collider.gameObject.GetComponent<Enemies>().TakeDamage(hit.collider.gameObject.GetComponent<Enemies>().health, valueRolled);
-                }
+                case 1f:
+                    melee.GetComponent<BulletScript>().direction = "Up";
+                    break;
+                case -1f:
+                    melee.GetComponent<BulletScript>().direction = "Down";
+                    break;
             }
 
+            bulletExists = true;
             valueRolled = 0;
             valueIsRolled = false;
             actionTaken = "None";
             actionsLeft--;
         }
 
-        if (Input.GetAxisRaw("Vertical") == 1f)
-        {
-            RaycastHit2D hit = Physics2D.Raycast(raycasts[0].position, Vector3.up, range);
-
-            if (hit)
-            {
-                if (hit.collider.gameObject.CompareTag("Enemy"))
-                {
-                    hit.collider.gameObject.GetComponent<Enemies>().health = hit.collider.gameObject.GetComponent<Enemies>().TakeDamage(hit.collider.gameObject.GetComponent<Enemies>().health, valueRolled);
-                }
-            }
-
-            valueRolled = 0;
-            valueIsRolled = false;
-            actionTaken = "None";
-            actionsLeft--;
-        }
-
-        if (Input.GetAxisRaw("Vertical") == -1f)
-        {
-            RaycastHit2D hit = Physics2D.Raycast(raycasts[1].position, Vector3.down, range);
-
-            if (hit)
-            {
-                if (hit.collider.gameObject.CompareTag("Enemy"))
-                {
-                    hit.collider.gameObject.GetComponent<Enemies>().health = hit.collider.gameObject.GetComponent<Enemies>().TakeDamage(hit.collider.gameObject.GetComponent<Enemies>().health, valueRolled);
-                }
-            }
-
-            valueRolled = 0;
-            valueIsRolled = false;
-            actionTaken = "None";
-            actionsLeft--;
-        }
     }
 
     private void Heal()

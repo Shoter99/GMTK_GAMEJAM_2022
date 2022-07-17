@@ -10,8 +10,18 @@ public sealed class BulletScript : MonoBehaviour
 
     public int strength;
 
+    public int length = 0;
+
     public GameObject owner;
 
+
+    private void Start()
+    {
+        if (length == 0)
+        {
+            length = strength;
+        }
+    }
 
     void FixedUpdate()
     {
@@ -34,7 +44,7 @@ public sealed class BulletScript : MonoBehaviour
 
     private void Update()
     {
-        if (Vector3.Distance(transform.position, owner.transform.position) >= strength)
+        if (Vector3.Distance(transform.position, owner.transform.position) >= length)
         {
             Destroy(gameObject);
         }
@@ -55,6 +65,7 @@ public sealed class BulletScript : MonoBehaviour
         if (collision.gameObject.CompareTag("Enemy"))
         {
             collision.gameObject.GetComponent<Enemies>().health = collision.gameObject.GetComponent<Enemies>().TakeDamage(collision.gameObject.GetComponent<Enemies>().health, strength);
+            Debug.Log("Test");
             Destroy(gameObject);
         }
 

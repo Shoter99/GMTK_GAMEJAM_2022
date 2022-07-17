@@ -21,6 +21,10 @@ MonoBehaviour:
     m_Address: Bullet
     m_ReadOnly: 0
     m_SerializedLabels: []
+  - m_GUID: 1ebe1b038422ef24390c080f5a7ea824
+    m_Address: Melee
+    m_ReadOnly: 0
+    m_SerializedLabels: []
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 4b24b81170faf5b408024027c6b7e771, type: 2}
   m_SchemaSet:
