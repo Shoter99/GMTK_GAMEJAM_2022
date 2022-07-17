@@ -11,6 +11,7 @@ public class UiManager : MonoBehaviour
     public int minValue = 1;
     // order of dices: melee, ranged, reposition, heal, defense
     public GameObject[] diceParents = {};
+    public GameObject hpBar;
     public int[] diceCounts = new int[5];
     public Animator[,] diceAnims = new Animator[5,3];
     public int[] selected = {7,7};
@@ -18,18 +19,25 @@ public class UiManager : MonoBehaviour
 
 
 
+
     void Start()
     {
         for (int i = 0; i < 5; i++)
         {
+            for (int j = 0; j < hpBar.transform.childCount; j++)
+            {
+            hpBar.transform.GetChild(j).gameObject.SetActive(false);
+            }
             diceCounts[i] = diceParents[i].transform.childCount;
             for (int j = 0; j < diceCounts[i]; j++)
             {
                 diceAnims[i,j] = diceParents[i].transform.GetChild(j).GetChild(0).gameObject.GetComponent<Animator>();
             }
+
+            updateHealth(6);
         }
     }
-
+    
 //reroll takes [5,3] array of numbers to show on dices
     public void reroll(int [,] diceValues){
         removeSelected();
@@ -86,11 +94,18 @@ public class UiManager : MonoBehaviour
         
     }
 
-    void updateHealth()
+    void updateHealth(int health)
     {
-        if (health <= 0)
-        {
-            health = 0;
-        }   
+        //unhide all children of hpbar
+        for (int i = hpBar.transform.childCount-1; i >=0; i--)
+        {  
+            Debug.Log(i);
+            if (i<health){
+                hpBar.transform.GetChild(i).gameObject.SetActive(false);
+            }
+            else{
+                hpBar.transform.GetChild(i).gameObject.SetActive(true);
+            }
+        }
     }
 }
