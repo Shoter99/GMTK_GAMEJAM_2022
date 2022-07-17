@@ -7,6 +7,7 @@ public sealed class Player : MonoBehaviour
 {
     public static Player Instance { get; private set; }
 
+    [Range(0, 10)]
     public int health = 10;
     public int actionsLeft = 2;
     public int damageResistanceStrength = 0;
