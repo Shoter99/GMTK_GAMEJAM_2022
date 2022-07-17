@@ -5,9 +5,13 @@ public sealed class EnemyManager : MonoBehaviour
 {
     public static EnemyManager Instance { get; private set; }
 
-    public List<Enemies> enemies = new List<Enemies>();
+    public List<MeleeEnemy> meleeEnemies = new List<MeleeEnemy>();
+    public List<FireEnemy> rangeEnemies = new List<FireEnemy>();
+    public List<MinerEnemy> minerEnemies = new List<MinerEnemy>();
 
-    private bool enemiesMoving = false;
+    public string phase = "None";
+
+    private bool phaseInProgress = false;
 
 
     private void Awake()
@@ -17,34 +21,120 @@ public sealed class EnemyManager : MonoBehaviour
 
     private void Update()
     {
-        // Kiedy jest tura przeciwnikow, Enemy Manager na razie wywo³e funkje TakeAction() wszystkim przeciwnikom rownoczesnie
-        if (GameManager.Instance.turn == "Enemies")
+        if (GameManager.Instance.turn == "Player")
+            return;
+
+
+        if (phase == "None")
         {
-            if (!enemiesMoving)
+            phase = "Fire";
+
+            foreach (MeleeEnemy enemy in meleeEnemies)
             {
-                foreach (Enemies enemy in enemies)
-                {
-                    enemy.TakeAction(1, 6, enemy.IsPlayerNear(enemy.raycasts[0], enemy.raycasts[1], enemy.raycasts[2], enemy.raycasts[3]), enemy.moveSpeed, enemy.movePoint);
-                }
-                enemiesMoving = true;
+                enemy.rolledValue = enemy.RollNumber(enemy.minValue, enemy.maxValue);
             }
-            else
+
+            foreach (FireEnemy enemy in rangeEnemies)
             {
-                // Kiedy wszyscy przeciwnicy wykonali swoj¹ akcje, zaczyna siê tura gracza
-                int enemiesNotMoving = 0;
-                foreach (Enemies enemy in enemies)
+                enemy.rolledValue = enemy.RollNumber(enemy.minValue, enemy.maxValue);
+            }
+
+            foreach (MinerEnemy enemy in minerEnemies)
+            {
+                enemy.rolledValue = enemy.RollNumber(enemy.minValue, enemy.maxValue);
+            }
+        }
+
+        switch (phase)
+        {
+            case "Fire":
+                if (phaseInProgress)
                 {
-                    if (!enemy.isMoving)
+                    foreach (FireEnemy enemy in rangeEnemies)
                     {
-                        enemiesNotMoving++;
+                        if (enemy.bulletExists)
+                            return;
+                    }
+
+                    phaseInProgress = false;
+                    phase = "Move";
+                }
+                else
+                {
+                    phaseInProgress = true;
+                    foreach (FireEnemy enemy in rangeEnemies)
+                    {
+                        enemy.Attack();
                     }
                 }
-                if (enemiesNotMoving == enemies.Count)
+                break;
+            case "Move":
+                if (phaseInProgress)
                 {
-                    enemiesMoving = false;
-                    GameManager.Instance.turn = "Player";
+                    foreach (MeleeEnemy enemy in meleeEnemies)
+                    {
+                        if (enemy.isMoving)
+                            return;
+                    }
+
+                    foreach (FireEnemy enemy in rangeEnemies)
+                    {
+                        if (enemy.isMoving)
+                            return;
+                    }
+
+                    foreach (MinerEnemy enemy in minerEnemies)
+                    {
+                        if (enemy.isMoving)
+                            return;
+                    }
+
+                    phaseInProgress = false;
+                    phase = "Melee";
                 }
-            }
+                else
+                {
+                    phaseInProgress = true;
+
+                    foreach (MeleeEnemy enemy in meleeEnemies)
+                    {
+                        enemy.isMoving = true;
+                        StartCoroutine(enemy.Move());
+                    }
+
+                    foreach (FireEnemy enemy in rangeEnemies)
+                    {
+                        if (!enemy.bulletFiredThisTurn)
+                        {
+                            enemy.isMoving = true;
+                            StartCoroutine(enemy.Move());
+                        }
+                    }
+
+                    foreach (MinerEnemy enemy in minerEnemies)
+                    {
+                        enemy.isMoving = true;
+                        StartCoroutine(enemy.Move());
+                    }
+                }
+                break;
+            case "Melee":
+                foreach (MeleeEnemy enemy in meleeEnemies)
+                {
+                    enemy.Attack();
+                }
+
+                phase = "None";
+
+                foreach (FireEnemy enemy in rangeEnemies)
+                {
+                    enemy.bulletFiredThisTurn = false;
+                }
+
+                GameManager.Instance.turn = "Player";
+                Player.Instance.actionsLeft = 2;
+
+                break;
         }
     }
 }

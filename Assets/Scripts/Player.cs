@@ -7,8 +7,11 @@ public sealed class Player : MonoBehaviour
     public static Player Instance { get; private set; }
 
     public int health = 10;
+    public int actionsLeft = 2;
+    public int damageResistanceStrength = 0;
+    public int shieldDurabality = 0;
 
-    public bool valueIsRolled = false;
+    public bool valueIsRolled = false, bulletExists = false;
 
     [SerializeField]
     [Range(0, 20)]
@@ -24,8 +27,10 @@ public sealed class Player : MonoBehaviour
 
     private Transform movePoint;
 
+
     private void Awake()
     {
+        Instance = this;
         movePoint = transform.GetChild(0).transform;
         movePoint.parent = null;
     }
@@ -33,6 +38,9 @@ public sealed class Player : MonoBehaviour
     private void Update()
     {
         if (GameManager.Instance.turn == "Enemies")
+            return;
+
+        if (bulletExists)
             return;
 
         if (!valueIsRolled)
@@ -44,6 +52,8 @@ public sealed class Player : MonoBehaviour
         switch (actionTaken)
         {
             case "None":
+                if (actionsLeft <= 0)
+                    GameManager.Instance.turn = "Enemies";
                 return;
 
             case "Move":
@@ -56,11 +66,7 @@ public sealed class Player : MonoBehaviour
                 MeleeAttack();
                 break;
             case "Heal":
-                health = Heal(health);
-                valueRolled = 0;
-                valueIsRolled = false;
-                actionTaken = "None";
-                GameManager.Instance.turn = "Enemies";
+                Heal();
                 break;
             case "Defend":
                 Defend();
@@ -77,21 +83,59 @@ public sealed class Player : MonoBehaviour
             if (valueRolled == 0)
             {
                 valueIsRolled = false;
-                GameManager.Instance.turn = "Enemies";
+                actionsLeft--;
                 actionTaken = "None";
                 return;
             }
 
+            RaycastHit2D hit;
+
             if (Mathf.Abs(Input.GetAxisRaw("Horizontal")) == 1f)
             {
-                valueRolled--;
-                movePoint.position += new Vector3(Input.GetAxisRaw("Horizontal"), 0f, 0f);
+                switch (Input.GetAxisRaw("Horizontal"))
+                {
+                    case 1f:
+                        hit = Physics2D.Raycast(raycasts[2].position, Vector2.right, 1);
+                        if (!hit)
+                        {
+                            valueRolled--;
+                            movePoint.position += new Vector3(Input.GetAxisRaw("Horizontal"), 0f, 0f);
+                        }
+                        break;
+
+                    case -1f:
+                        hit = Physics2D.Raycast(raycasts[3].position, Vector2.left, 1);
+                        if (!hit)
+                        {
+                            valueRolled--;
+                            movePoint.position += new Vector3(Input.GetAxisRaw("Horizontal"), 0f, 0f);
+                        }
+                        break;
+                }
             }
 
             if (Mathf.Abs(Input.GetAxisRaw("Vertical")) == 1f)
             {
-                valueRolled--;
-                movePoint.position += new Vector3(0f, Input.GetAxisRaw("Vertical"), 0f);
+                switch (Input.GetAxisRaw("Vertical"))
+                {
+                    case 1f:
+                        hit = Physics2D.Raycast(raycasts[0].position, Vector2.up, 1);
+                        if (!hit)
+                        {
+                            valueRolled--;
+                            movePoint.position += new Vector3(0f, Input.GetAxisRaw("Vertical"), 0f);
+                        }
+                        break;
+
+                    case -1f:
+                        hit = Physics2D.Raycast(raycasts[1].position, Vector2.down, 1);
+                        if (!hit)
+                        {
+                            valueRolled--;
+                            movePoint.position += new Vector3(0f, Input.GetAxisRaw("Vertical"), 0f);
+                        }
+                        break;
+                }
             }
         }
     }
@@ -107,7 +151,8 @@ public sealed class Player : MonoBehaviour
             actionTaken = "None";
             valueRolled = 0;
             valueIsRolled = false;
-            GameManager.Instance.turn = "Enemies";
+            bulletExists = true;
+            actionsLeft--;
         }
 
         if (Input.GetAxisRaw("Horizontal") == -1f)
@@ -119,7 +164,8 @@ public sealed class Player : MonoBehaviour
             actionTaken = "None";
             valueRolled = 0;
             valueIsRolled = false;
-            GameManager.Instance.turn = "Enemies";
+            bulletExists = true;
+            actionsLeft--;
         }
 
         if (Input.GetAxisRaw("Vertical") == 1f)
@@ -131,7 +177,8 @@ public sealed class Player : MonoBehaviour
             actionTaken = "None";
             valueRolled = 0;
             valueIsRolled = false;
-            GameManager.Instance.turn = "Enemies";
+            bulletExists = true;
+            actionsLeft--;
         }
 
         if (Input.GetAxisRaw("Vertical") == -1f)
@@ -143,84 +190,134 @@ public sealed class Player : MonoBehaviour
             actionTaken = "None";
             valueRolled = 0;
             valueIsRolled = false;
-            GameManager.Instance.turn = "Enemies";
+            bulletExists = true;
+            actionsLeft--;
         }
     }
 
     private void MeleeAttack()
     {
+        int range;
+
+        if (valueRolled >= 5)
+        {
+            range = 2;
+        }
+        else
+        {
+            range = 1;
+        }
+
         if (Input.GetAxisRaw("Horizontal") == 1f)
         {
-            RaycastHit2D hit = Physics2D.Raycast(raycasts[2].position, Vector3.right, 1);
+            RaycastHit2D hit = Physics2D.Raycast(raycasts[2].position, Vector3.right, range);
 
             if (hit)
             {
-                hit.collider.gameObject.GetComponent<Enemies>().health = hit.collider.gameObject.GetComponent<Enemies>().TakeDamage(hit.collider.gameObject.GetComponent<Enemies>().health, valueRolled);
+                if (hit.collider.gameObject.CompareTag("Enemy"))
+                {
+                    hit.collider.gameObject.GetComponent<Enemies>().health = hit.collider.gameObject.GetComponent<Enemies>().TakeDamage(hit.collider.gameObject.GetComponent<Enemies>().health, valueRolled);
+                }
             }
 
             valueRolled = 0;
             valueIsRolled = false;
             actionTaken = "None";
-            GameManager.Instance.turn = "Enemies";
+            actionsLeft--;
         }
 
         if (Input.GetAxisRaw("Horizontal") == -1f)
         {
-            RaycastHit2D hit = Physics2D.Raycast(raycasts[3].position, Vector3.left, 1);
+            RaycastHit2D hit = Physics2D.Raycast(raycasts[3].position, Vector3.left, range);
 
             if (hit)
             {
-                hit.collider.gameObject.GetComponent<Enemies>().health = hit.collider.gameObject.GetComponent<Enemies>().TakeDamage(hit.collider.gameObject.GetComponent<Enemies>().health, valueRolled);
+                if (hit.collider.gameObject.CompareTag("Enemy"))
+                {
+                    hit.collider.gameObject.GetComponent<Enemies>().health = hit.collider.gameObject.GetComponent<Enemies>().TakeDamage(hit.collider.gameObject.GetComponent<Enemies>().health, valueRolled);
+                }
             }
 
             valueRolled = 0;
             valueIsRolled = false;
             actionTaken = "None";
-            GameManager.Instance.turn = "Enemies";
+            actionsLeft--;
         }
 
         if (Input.GetAxisRaw("Vertical") == 1f)
         {
-            RaycastHit2D hit = Physics2D.Raycast(raycasts[0].position, Vector3.up, 1);
+            RaycastHit2D hit = Physics2D.Raycast(raycasts[0].position, Vector3.up, range);
 
             if (hit)
             {
-                hit.collider.gameObject.GetComponent<Enemies>().health = hit.collider.gameObject.GetComponent<Enemies>().TakeDamage(hit.collider.gameObject.GetComponent<Enemies>().health, valueRolled);
+                if (hit.collider.gameObject.CompareTag("Enemy"))
+                {
+                    hit.collider.gameObject.GetComponent<Enemies>().health = hit.collider.gameObject.GetComponent<Enemies>().TakeDamage(hit.collider.gameObject.GetComponent<Enemies>().health, valueRolled);
+                }
             }
 
             valueRolled = 0;
             valueIsRolled = false;
             actionTaken = "None";
-            GameManager.Instance.turn = "Enemies";
+            actionsLeft--;
         }
 
         if (Input.GetAxisRaw("Vertical") == -1f)
         {
-            RaycastHit2D hit = Physics2D.Raycast(raycasts[1].position, Vector3.down, 1);
+            RaycastHit2D hit = Physics2D.Raycast(raycasts[1].position, Vector3.down, range);
 
             if (hit)
             {
-                hit.collider.gameObject.GetComponent<Enemies>().health = hit.collider.gameObject.GetComponent<Enemies>().TakeDamage(hit.collider.gameObject.GetComponent<Enemies>().health, valueRolled);
+                if (hit.collider.gameObject.CompareTag("Enemy"))
+                {
+                    hit.collider.gameObject.GetComponent<Enemies>().health = hit.collider.gameObject.GetComponent<Enemies>().TakeDamage(hit.collider.gameObject.GetComponent<Enemies>().health, valueRolled);
+                }
             }
 
             valueRolled = 0;
             valueIsRolled = false;
             actionTaken = "None";
-            GameManager.Instance.turn = "Enemies";
+            actionsLeft--;
         }
+    }
+
+    private void Heal()
+    {
+        health += (int)Mathf.Floor(valueRolled * 1.5f);
+        valueRolled = 0;
+        valueIsRolled = false;
+        actionTaken = "None";
+        actionsLeft--;
     }
     
     private void Defend()
     {
+        shieldDurabality = 2;
+        damageResistanceStrength = valueRolled;
         actionTaken = "None";
-        GameManager.Instance.turn = "Enemies";
+        actionsLeft--;
         valueRolled = 0;
         valueIsRolled = false;
     }
 
-    private int Heal(int health) => health + valueRolled;
-
     public int RollAValue(int minValue, int maxValue) => Random.Range(minValue, maxValue + 1);
 
-    public int TakeDamage(int health, int amount) => health -= amount;
+    public void TakeDamage(int amount)
+    {
+        if (shieldDurabality == 0)
+        {
+            health -= amount;
+        }
+        else
+        {
+            if (amount >= damageResistanceStrength)
+            {
+                health -= amount;
+            }
+            else
+            {
+                shieldDurabality--;
+            }
+        }
+    }
 }

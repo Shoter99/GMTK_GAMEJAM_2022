@@ -32,6 +32,14 @@ public sealed class BulletScript : MonoBehaviour
         }
     }
 
+    private void Update()
+    {
+        if (Vector3.Distance(transform.position, owner.transform.position) >= strength)
+        {
+            Destroy(gameObject);
+        }
+    }
+
     private void OnTriggerEnter2D(Collider2D collision)
     {
 
@@ -40,7 +48,7 @@ public sealed class BulletScript : MonoBehaviour
 
         if (collision.gameObject.CompareTag("Player"))
         {
-            collision.gameObject.GetComponent<Player>().health = collision.gameObject.GetComponent<Player>().TakeDamage(collision.gameObject.GetComponent<Player>().health, strength);
+            collision.gameObject.GetComponent<Player>().TakeDamage(strength);
             Destroy(gameObject);
         }
 
@@ -48,6 +56,24 @@ public sealed class BulletScript : MonoBehaviour
         {
             collision.gameObject.GetComponent<Enemies>().health = collision.gameObject.GetComponent<Enemies>().TakeDamage(collision.gameObject.GetComponent<Enemies>().health, strength);
             Destroy(gameObject);
+        }
+
+        if (collision.gameObject.CompareTag("Walls"))
+        {
+            Destroy(gameObject);
+        }
+    }
+
+    private void OnDestroy()
+    {
+        if (owner.CompareTag("Player"))
+        {
+            owner.GetComponent<Player>().bulletExists = false;
+        }
+
+        if (owner.CompareTag("Enemy"))
+        {
+            owner.GetComponent<FireEnemy>().bulletExists = false;
         }
     }
 }
