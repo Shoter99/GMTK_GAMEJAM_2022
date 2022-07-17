@@ -2194,7 +2194,19 @@ MonoBehaviour:
   m_Group: {fileID: 0}
   onValueChanged:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1360265408}
+        m_TargetAssemblyTypeName: MainMenu, Assembly-CSharp
+        m_MethodName: Toggle_Music
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   m_IsOn: 1
 --- !u!1 &2026220580
 GameObject:
@@ -2279,8 +2291,32 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 4917107455404511641, guid: 0fb2c9f2dcd1a9b40a4016f323500c25, type: 3}
+      propertyPath: sounds.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4917107455404511641, guid: 0fb2c9f2dcd1a9b40a4016f323500c25, type: 3}
+      propertyPath: sounds.Array.data[0].clip
+      value: 
+      objectReference: {fileID: 8300000, guid: a519cb3e417dc1d4b994df2d240dd8f4, type: 3}
+    - target: {fileID: 4917107455404511641, guid: 0fb2c9f2dcd1a9b40a4016f323500c25, type: 3}
+      propertyPath: sounds.Array.data[0].loop
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4917107455404511641, guid: 0fb2c9f2dcd1a9b40a4016f323500c25, type: 3}
+      propertyPath: sounds.Array.data[0].name
+      value: MainTheme
+      objectReference: {fileID: 0}
+    - target: {fileID: 4917107455404511641, guid: 0fb2c9f2dcd1a9b40a4016f323500c25, type: 3}
+      propertyPath: sounds.Array.data[0].pitch
+      value: 0.53
+      objectReference: {fileID: 0}
+    - target: {fileID: 4917107455404511641, guid: 0fb2c9f2dcd1a9b40a4016f323500c25, type: 3}
       propertyPath: sounds.Array.data[1].pitch
       value: 0.53
+      objectReference: {fileID: 0}
+    - target: {fileID: 4917107455404511641, guid: 0fb2c9f2dcd1a9b40a4016f323500c25, type: 3}
+      propertyPath: sounds.Array.data[0].volume
+      value: 0.333
       objectReference: {fileID: 0}
     - target: {fileID: 4917107455404511641, guid: 0fb2c9f2dcd1a9b40a4016f323500c25, type: 3}
       propertyPath: sounds.Array.data[1].volume
