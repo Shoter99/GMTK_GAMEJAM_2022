@@ -64,10 +64,11 @@ public sealed class MeleeEnemy : Enemies
         if (IsPlayerNear())
         {
             GameObject melee = Instantiate(Addressables.LoadAssetAsync<GameObject>("Melee").WaitForCompletion(), transform.position, Quaternion.identity);
-            melee.GetComponent<BulletScript>().strength = rolledValue;
+            melee.GetComponent<BulletScript>().strength = storedValue;
             melee.GetComponent<BulletScript>().length = 1;
             melee.GetComponent<BulletScript>().owner = gameObject;
-            melee.GetComponent<BulletScript>().direction = wherePlayer
+            melee.GetComponent<BulletScript>().direction = wherePlayer;
+            bulletExists = true;
 ;
         }
     }

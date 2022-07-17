@@ -65,7 +65,6 @@ public sealed class BulletScript : MonoBehaviour
         if (collision.gameObject.CompareTag("Enemy"))
         {
             collision.gameObject.GetComponent<Enemies>().health = collision.gameObject.GetComponent<Enemies>().TakeDamage(collision.gameObject.GetComponent<Enemies>().health, strength);
-            Debug.Log("Test");
             Destroy(gameObject);
         }
 
@@ -84,7 +83,7 @@ public sealed class BulletScript : MonoBehaviour
 
         if (owner.CompareTag("Enemy"))
         {
-            owner.GetComponent<FireEnemy>().bulletExists = false;
+            owner.GetComponent<Enemies>().bulletExists = false;
         }
     }
 }

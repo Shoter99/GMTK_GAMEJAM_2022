@@ -32,6 +32,7 @@ public sealed class EnemyManager : MonoBehaviour
             foreach (MeleeEnemy enemy in meleeEnemies)
             {
                 enemy.rolledValue = enemy.RollNumber(enemy.minValue, enemy.maxValue);
+                enemy.storedValue = enemy.rolledValue;
             }
 
             foreach (FireEnemy enemy in rangeEnemies)
@@ -119,20 +120,38 @@ public sealed class EnemyManager : MonoBehaviour
                 }
                 break;
             case "Melee":
-                foreach (MeleeEnemy enemy in meleeEnemies)
+                if (phaseInProgress)
                 {
-                    enemy.Attack();
+                    foreach (MeleeEnemy enemy in meleeEnemies)
+                    {
+                        if (enemy.bulletExists)
+                            return;
+                    }
+
+                    phaseInProgress = false;
+
+                    phase = "None";
+
+                    foreach (FireEnemy enemy in rangeEnemies)
+                    {
+                        enemy.bulletFiredThisTurn = false;
+                    }
+
+                    GameManager.Instance.turn = "Player";
+                    Player.Instance.actionsLeft = 2;
+
+                    break;
+
                 }
-
-                phase = "None";
-
-                foreach (FireEnemy enemy in rangeEnemies)
+                else
                 {
-                    enemy.bulletFiredThisTurn = false;
-                }
+                    phaseInProgress = true;
 
-                GameManager.Instance.turn = "Player";
-                Player.Instance.actionsLeft = 2;
+                    foreach (MeleeEnemy enemy in meleeEnemies)
+                    {
+                        enemy.Attack();
+                    }
+                }
 
                 break;
         }

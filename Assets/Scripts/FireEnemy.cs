@@ -3,7 +3,7 @@ using UnityEngine.AddressableAssets;
 
 public class FireEnemy : Enemies
 {
-    public bool bulletExists = false, bulletFiredThisTurn = false;
+    public bool bulletFiredThisTurn = false;
 
     private string playerPosition;
 

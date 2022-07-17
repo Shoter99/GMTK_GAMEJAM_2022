@@ -6,14 +6,14 @@ public abstract class Enemies : MonoBehaviour
 {
     public int health = 10;
 
-    public int minValue, maxValue, rolledValue;
+    public int minValue, maxValue, rolledValue, storedValue;
 
     private int stackOverFlowProtection = 0;
 
     [Range(0, 20)]
     public float moveSpeed;
 
-    public bool isMoving = false;
+    public bool isMoving = false, bulletExists = false;
 
 
     public float raycastLength;
