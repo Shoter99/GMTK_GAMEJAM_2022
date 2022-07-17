@@ -1187,6 +1187,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 4917107455404511641, guid: 0fb2c9f2dcd1a9b40a4016f323500c25, type: 3}
+      propertyPath: sounds.Array.data[1].pitch
+      value: 1.08
+      objectReference: {fileID: 0}
     - target: {fileID: 8981353312632022458, guid: 0fb2c9f2dcd1a9b40a4016f323500c25, type: 3}
       propertyPath: m_RootOrder
       value: 9
@@ -1339,6 +1343,18 @@ PrefabInstance:
     - target: {fileID: 3522279240570361510, guid: b00f38ae24f540d4691cd180adb78209, type: 3}
       propertyPath: m_AnchoredPosition.y
       value: -129
+      objectReference: {fileID: 0}
+    - target: {fileID: 3522279241482568266, guid: b00f38ae24f540d4691cd180adb78209, type: 3}
+      propertyPath: m_UiScaleMode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3522279241482568266, guid: b00f38ae24f540d4691cd180adb78209, type: 3}
+      propertyPath: m_ReferenceResolution.x
+      value: 1920
+      objectReference: {fileID: 0}
+    - target: {fileID: 3522279241482568266, guid: b00f38ae24f540d4691cd180adb78209, type: 3}
+      propertyPath: m_ReferenceResolution.y
+      value: 1080
       objectReference: {fileID: 0}
     - target: {fileID: 3522279241482568267, guid: b00f38ae24f540d4691cd180adb78209, type: 3}
       propertyPath: m_Camera
