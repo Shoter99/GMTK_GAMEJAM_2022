@@ -15,14 +15,14 @@ public class clickTriggered : MonoBehaviour
         receiver = EventSystem.GetComponent<UiManager>();
         this.GetComponent<Animator>().Play("unclicked");
         isClicked = false;
+        receiver.selectedCount = 0;  
 
 
     }
 
 
     public void clicked(){
-        Debug.Log(receiver.selectedCount);
-
+        Debug.Log(isClicked);
         if (isClicked) {
             this.unclick();
         }

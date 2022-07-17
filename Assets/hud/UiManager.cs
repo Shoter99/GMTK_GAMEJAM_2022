@@ -14,7 +14,7 @@ public class UiManager : MonoBehaviour
     public int[] diceCounts = new int[5];
     public Animator[,] diceAnims = new Animator[5,3];
     public int[] selected = {7,7};
-    public int selectedCount = 6;
+    public int selectedCount = 0;
 
 
 
