@@ -31,4 +31,10 @@ public class MainMenu : MonoBehaviour
         Screen.fullScreen = isToggled;
         print(isToggled);
     }
+    public void Toggle_Music(bool isToggled)
+    {
+        AudioSource am = FindObjectOfType<AudioManager>().GetComponent<AudioSource>();
+        am.mute = !isToggled;
+     
+    }
 }
