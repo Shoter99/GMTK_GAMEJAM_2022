@@ -20,7 +20,7 @@ public sealed class MeleeEnemy : Enemies
     {
         RaycastHit2D hit;
 
-        hit = Physics2D.Raycast(raycasts[0].position, Vector3.up, raycastLength);
+        hit = Physics2D.Raycast(raycasts[0].position, Vector3.up, raycastLength - 0.5f);
 
         if (hit)
             if (hit.collider.gameObject.CompareTag("Player"))
@@ -29,7 +29,7 @@ public sealed class MeleeEnemy : Enemies
                 return true;
             }
 
-        hit = Physics2D.Raycast(raycasts[1].position, Vector3.down, raycastLength);
+        hit = Physics2D.Raycast(raycasts[1].position, Vector3.down, raycastLength - 0.5f);
 
         if (hit)
             if (hit.collider.gameObject.CompareTag("Player"))
@@ -38,7 +38,7 @@ public sealed class MeleeEnemy : Enemies
                 return true;
             }
 
-        hit = Physics2D.Raycast(raycasts[2].position, Vector3.right, raycastLength);
+        hit = Physics2D.Raycast(raycasts[2].position, Vector3.right, raycastLength - 0.5f);
 
         if (hit)
             if (hit.collider.gameObject.CompareTag("Player"))
@@ -47,7 +47,7 @@ public sealed class MeleeEnemy : Enemies
                 return true;
             }
 
-        hit = Physics2D.Raycast(raycasts[3].position, Vector3.left, raycastLength);
+        hit = Physics2D.Raycast(raycasts[3].position, Vector3.left, raycastLength - 0.5f);
 
         if (hit)
             if (hit.collider.gameObject.CompareTag("Player"))

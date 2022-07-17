@@ -22,8 +22,7 @@ public sealed class Player : MonoBehaviour
     [SerializeField]
     private string actionTaken = "None";
 
-    [SerializeField]
-    private List<Transform> raycasts = new List<Transform>();
+    private readonly List<Transform> raycasts = new List<Transform>();
 
     private Transform movePoint;
 
@@ -65,7 +64,7 @@ public sealed class Player : MonoBehaviour
                 Move();
                 break;
             case "Fire":
-                Fire();               
+                Fire();
                 break;
             case "Melee":
                 MeleeAttack();
@@ -100,8 +99,17 @@ public sealed class Player : MonoBehaviour
                 switch (Input.GetAxisRaw("Horizontal"))
                 {
                     case 1f:
-                        hit = Physics2D.Raycast(raycasts[2].position, Vector2.right, 1);
-                        if (!hit)
+                        hit = Physics2D.Raycast(raycasts[2].position, Vector2.right, 0.5f);
+
+                        if (hit)
+                        {
+                            if (!hit.collider.CompareTag("Enemy") && !hit.collider.CompareTag("Walls"))
+                            {
+                                valueRolled--;
+                                movePoint.position += new Vector3(Input.GetAxisRaw("Horizontal"), 0f, 0f);
+                            }
+                        }
+                        else
                         {
                             valueRolled--;
                             movePoint.position += new Vector3(Input.GetAxisRaw("Horizontal"), 0f, 0f);
@@ -109,8 +117,16 @@ public sealed class Player : MonoBehaviour
                         break;
 
                     case -1f:
-                        hit = Physics2D.Raycast(raycasts[3].position, Vector2.left, 1);
-                        if (!hit)
+                        hit = Physics2D.Raycast(raycasts[3].position, Vector2.left, 0.5f);
+                        if (hit)
+                        {
+                            if (!hit.collider.CompareTag("Enemy") && !hit.collider.CompareTag("Walls"))
+                            {
+                                valueRolled--;
+                                movePoint.position += new Vector3(Input.GetAxisRaw("Horizontal"), 0f, 0f);
+                            }
+                        }
+                        else
                         {
                             valueRolled--;
                             movePoint.position += new Vector3(Input.GetAxisRaw("Horizontal"), 0f, 0f);
@@ -124,8 +140,16 @@ public sealed class Player : MonoBehaviour
                 switch (Input.GetAxisRaw("Vertical"))
                 {
                     case 1f:
-                        hit = Physics2D.Raycast(raycasts[0].position, Vector2.up, 1);
-                        if (!hit)
+                        hit = Physics2D.Raycast(raycasts[0].position, Vector2.up, 0.5f);
+                        if (hit)
+                        {
+                            if (!hit.collider.CompareTag("Enemy") && !hit.collider.CompareTag("Walls"))
+                            {
+                                valueRolled--;
+                                movePoint.position += new Vector3(0f, Input.GetAxisRaw("Vertical"), 0f);
+                            }
+                        }
+                        else
                         {
                             valueRolled--;
                             movePoint.position += new Vector3(0f, Input.GetAxisRaw("Vertical"), 0f);
@@ -133,8 +157,16 @@ public sealed class Player : MonoBehaviour
                         break;
 
                     case -1f:
-                        hit = Physics2D.Raycast(raycasts[1].position, Vector2.down, 1);
-                        if (!hit)
+                        hit = Physics2D.Raycast(raycasts[1].position, Vector2.down, 0.5f);
+                        if (hit)
+                        {
+                            if (!hit.collider.CompareTag("Enemy") && !hit.collider.CompareTag("Walls"))
+                            {
+                                valueRolled--;
+                                movePoint.position += new Vector3(0f, Input.GetAxisRaw("Vertical"), 0f);
+                            }
+                        }
+                        else
                         {
                             valueRolled--;
                             movePoint.position += new Vector3(0f, Input.GetAxisRaw("Vertical"), 0f);
@@ -286,7 +318,7 @@ public sealed class Player : MonoBehaviour
 
     public void TakeDamage(int amount)
     {
-        if (shieldDurabality == 0)
+        if (shieldDurabality <= 0)
         {
             health -= amount;
         }
