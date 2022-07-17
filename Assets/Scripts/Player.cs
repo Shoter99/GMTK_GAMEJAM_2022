@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public sealed class Player : MonoBehaviour
 {
@@ -349,6 +350,13 @@ public sealed class Player : MonoBehaviour
             actionsLeft--;
         }
 
+    }
+    private void LateUpdate()
+    {
+        if(health <= 0)
+        {
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        }
     }
 
     private void Heal()
