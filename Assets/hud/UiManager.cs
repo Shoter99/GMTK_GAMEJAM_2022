@@ -37,8 +37,8 @@ public class UiManager : MonoBehaviour
             {
                 diceAnims[i,j] = diceParents[i].transform.GetChild(j).GetChild(0).gameObject.GetComponent<Animator>();
             }
-
-            updateHealth(6);
+            int [,]  values = {{1,0,0},{2,0,0},{2,0,0},{3,0,0},{7,0,0}};
+            updateHealth(15);
         }
     }
     
