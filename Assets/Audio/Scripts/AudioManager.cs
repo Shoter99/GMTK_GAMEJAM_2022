@@ -21,10 +21,19 @@ public class AudioManager : MonoBehaviour
 
         foreach (Sound s in sounds)
         {
+            
             s.source = gameObject.AddComponent<AudioSource>();
             s.source.clip = s.clip;
             s.source.volume = s.volume;
-            s.source.pitch = s.pitch;
+            if(s.name == "MainTheme")
+            {
+                float rand = UnityEngine.Random.Range(20, 100)/100f;
+                s.source.pitch = rand;
+            }
+            else
+            {
+                s.source.pitch = s.pitch;
+            }
             s.source.loop = s.loop;
         }
     }

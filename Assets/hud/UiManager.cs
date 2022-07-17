@@ -5,7 +5,7 @@ using TMPro;
 
 public class UiManager : MonoBehaviour
 {
-
+    public static UiManager Instance { get; private set; }
 
     public int health = 10;
     public int minValue = 1;
@@ -18,6 +18,10 @@ public class UiManager : MonoBehaviour
     public int selectedCount = 0;
 
 
+    private void Awake()
+    {
+        Instance = this;
+    }
 
 
     void Start()
@@ -40,6 +44,7 @@ public class UiManager : MonoBehaviour
     
 //reroll takes [5,3] array of numbers to show on dices
     public void reroll(int [,] diceValues){
+
         removeSelected();
         for (int i = 0; i < 5; i++)
         {

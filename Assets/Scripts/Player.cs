@@ -17,7 +17,11 @@ public sealed class Player : MonoBehaviour
     [Range(0, 20)]
     private float moveSpeed = 1f;
 
-    public int minValue, maxValue, valueRolled;
+    public int minValue, maxValue;
+
+    public int moveValue, fireValue, meleeValue, healValue, defendValue;
+
+    public Dictionary<string, int> values = new Dictionary<string, int>();
 
     [SerializeField]
     private string actionTaken = "None";
@@ -37,6 +41,7 @@ public sealed class Player : MonoBehaviour
         {
             raycasts.Add(transform.GetChild(i).transform);
         }
+        
     }
 
     private void Update()
@@ -50,7 +55,18 @@ public sealed class Player : MonoBehaviour
         if (!valueIsRolled)
         {
             valueIsRolled = true;
-            valueRolled = RollAValue(minValue, maxValue);
+            moveValue = RollAValue(minValue, maxValue);
+            fireValue = RollAValue(minValue, maxValue);
+            meleeValue = RollAValue(minValue, maxValue);
+            healValue = RollAValue(minValue, maxValue);
+            defendValue = RollAValue(minValue, maxValue);
+            
+            int[,] diceValues = { { meleeValue, 0, 0 }, { fireValue, 0, 0 }, { moveValue, 0, 0 }, { healValue, 0, 0 }, { defendValue, 0, 0 } };
+
+            UiManager.Instance.reroll(diceValues);
+
+            //GameObject.Find("RepositionIcon").transform.GetChild(0).transform.GetChild(0).
+            
         }
 
         switch (actionTaken)
@@ -84,7 +100,7 @@ public sealed class Player : MonoBehaviour
 
         if (Vector3.Distance(transform.position, movePoint.position) == 0f)
         {
-            if (valueRolled == 0)
+            if (moveValue == 0)
             {
                 valueIsRolled = false;
                 actionsLeft--;
@@ -105,13 +121,13 @@ public sealed class Player : MonoBehaviour
                         {
                             if (!hit.collider.CompareTag("Enemy") && !hit.collider.CompareTag("Walls"))
                             {
-                                valueRolled--;
+                                moveValue--;
                                 movePoint.position += new Vector3(Input.GetAxisRaw("Horizontal"), 0f, 0f);
                             }
                         }
                         else
                         {
-                            valueRolled--;
+                            moveValue--;
                             movePoint.position += new Vector3(Input.GetAxisRaw("Horizontal"), 0f, 0f);
                         }
                         break;
@@ -122,13 +138,13 @@ public sealed class Player : MonoBehaviour
                         {
                             if (!hit.collider.CompareTag("Enemy") && !hit.collider.CompareTag("Walls"))
                             {
-                                valueRolled--;
+                                moveValue--;
                                 movePoint.position += new Vector3(Input.GetAxisRaw("Horizontal"), 0f, 0f);
                             }
                         }
                         else
                         {
-                            valueRolled--;
+                            moveValue--;
                             movePoint.position += new Vector3(Input.GetAxisRaw("Horizontal"), 0f, 0f);
                         }
                         break;
@@ -145,13 +161,13 @@ public sealed class Player : MonoBehaviour
                         {
                             if (!hit.collider.CompareTag("Enemy") && !hit.collider.CompareTag("Walls"))
                             {
-                                valueRolled--;
+                                moveValue--;
                                 movePoint.position += new Vector3(0f, Input.GetAxisRaw("Vertical"), 0f);
                             }
                         }
                         else
                         {
-                            valueRolled--;
+                            moveValue--;
                             movePoint.position += new Vector3(0f, Input.GetAxisRaw("Vertical"), 0f);
                         }
                         break;
@@ -162,13 +178,13 @@ public sealed class Player : MonoBehaviour
                         {
                             if (!hit.collider.CompareTag("Enemy") && !hit.collider.CompareTag("Walls"))
                             {
-                                valueRolled--;
+                                moveValue--;
                                 movePoint.position += new Vector3(0f, Input.GetAxisRaw("Vertical"), 0f);
                             }
                         }
                         else
                         {
-                            valueRolled--;
+                            moveValue--;
                             movePoint.position += new Vector3(0f, Input.GetAxisRaw("Vertical"), 0f);
                         }
                         break;
@@ -183,10 +199,10 @@ public sealed class Player : MonoBehaviour
         {
             GameObject bullet = Instantiate(Addressables.LoadAssetAsync<GameObject>("Bullet").WaitForCompletion(), transform.position, Quaternion.identity);
             bullet.GetComponent<BulletScript>().direction = "Right";
-            bullet.GetComponent<BulletScript>().strength = valueRolled;
+            bullet.GetComponent<BulletScript>().strength = fireValue;
             bullet.GetComponent<BulletScript>().owner = gameObject;
             actionTaken = "None";
-            valueRolled = 0;
+            fireValue = 0;
             valueIsRolled = false;
             bulletExists = true;
             actionsLeft--;
@@ -196,10 +212,10 @@ public sealed class Player : MonoBehaviour
         {
             GameObject bullet = Instantiate(Addressables.LoadAssetAsync<GameObject>("Bullet").WaitForCompletion(), transform.position, Quaternion.identity);
             bullet.GetComponent<BulletScript>().direction = "Left";
-            bullet.GetComponent<BulletScript>().strength = valueRolled;
+            bullet.GetComponent<BulletScript>().strength = fireValue;
             bullet.GetComponent<BulletScript>().owner = gameObject;
             actionTaken = "None";
-            valueRolled = 0;
+            fireValue = 0;
             valueIsRolled = false;
             bulletExists = true;
             actionsLeft--;
@@ -209,10 +225,10 @@ public sealed class Player : MonoBehaviour
         {
             GameObject bullet = Instantiate(Addressables.LoadAssetAsync<GameObject>("Bullet").WaitForCompletion(), transform.position, Quaternion.identity);
             bullet.GetComponent<BulletScript>().direction = "Up";
-            bullet.GetComponent<BulletScript>().strength = valueRolled;
+            bullet.GetComponent<BulletScript>().strength = fireValue;
             bullet.GetComponent<BulletScript>().owner = gameObject;
             actionTaken = "None";
-            valueRolled = 0;
+            fireValue = 0;
             valueIsRolled = false;
             bulletExists = true;
             actionsLeft--;
@@ -222,10 +238,10 @@ public sealed class Player : MonoBehaviour
         {
             GameObject bullet = Instantiate(Addressables.LoadAssetAsync<GameObject>("Bullet").WaitForCompletion(), transform.position, Quaternion.identity);
             bullet.GetComponent<BulletScript>().direction = "Down";
-            bullet.GetComponent<BulletScript>().strength = valueRolled;
+            bullet.GetComponent<BulletScript>().strength = fireValue;
             bullet.GetComponent<BulletScript>().owner = gameObject;
             actionTaken = "None";
-            valueRolled = 0;
+            fireValue = 0;
             valueIsRolled = false;
             bulletExists = true;
             actionsLeft--;
@@ -236,7 +252,7 @@ public sealed class Player : MonoBehaviour
     {
         int range;
 
-        if (valueRolled >= 5)
+        if (meleeValue >= 5)
         {
             range = 2;
         }
@@ -248,7 +264,7 @@ public sealed class Player : MonoBehaviour
         if (Mathf.Abs(Input.GetAxisRaw("Horizontal")) == 1f)
         {
             GameObject melee = Instantiate(Addressables.LoadAssetAsync<GameObject>("Melee").WaitForCompletion(), transform.position, Quaternion.identity);
-            melee.GetComponent<BulletScript>().strength = valueRolled*2;
+            melee.GetComponent<BulletScript>().strength = meleeValue * 2;
             melee.GetComponent<BulletScript>().length = range;
             melee.GetComponent<BulletScript>().owner = gameObject;
 
@@ -263,7 +279,7 @@ public sealed class Player : MonoBehaviour
             }
 
             bulletExists = true;
-            valueRolled = 0;
+            meleeValue = 0;
             valueIsRolled = false;
             actionTaken = "None";
             actionsLeft--;
@@ -272,7 +288,7 @@ public sealed class Player : MonoBehaviour
         if (Mathf.Abs(Input.GetAxisRaw("Vertical")) == 1f)
         {
             GameObject melee = Instantiate(Addressables.LoadAssetAsync<GameObject>("Melee").WaitForCompletion(), transform.position, Quaternion.identity);
-            melee.GetComponent<BulletScript>().strength = valueRolled*2;
+            melee.GetComponent<BulletScript>().strength = meleeValue * 2;
             melee.GetComponent<BulletScript>().length = range;
             melee.GetComponent<BulletScript>().owner = gameObject;
 
@@ -287,7 +303,7 @@ public sealed class Player : MonoBehaviour
             }
 
             bulletExists = true;
-            valueRolled = 0;
+            meleeValue = 0;
             valueIsRolled = false;
             actionTaken = "None";
             actionsLeft--;
@@ -297,8 +313,8 @@ public sealed class Player : MonoBehaviour
 
     private void Heal()
     {
-        health += (int)Mathf.Floor(valueRolled * 1.5f);
-        valueRolled = 0;
+        health += (int)Mathf.Floor(healValue * 1.5f);
+        healValue = 0;
         valueIsRolled = false;
         actionTaken = "None";
         actionsLeft--;
@@ -307,10 +323,10 @@ public sealed class Player : MonoBehaviour
     private void Defend()
     {
         shieldDurabality = 2;
-        damageResistanceStrength = valueRolled;
+        damageResistanceStrength = defendValue;
         actionTaken = "None";
         actionsLeft--;
-        valueRolled = 0;
+        defendValue = 0;
         valueIsRolled = false;
     }
 
