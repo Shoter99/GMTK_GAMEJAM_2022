@@ -128,7 +128,7 @@ public class UiManager : MonoBehaviour
         
     }
 
-    void updateHealth(int health)
+    public void updateHealth(int health)
     {
         health = 20 - health;
         //unhide all children of hpbar

@@ -71,11 +71,11 @@ public sealed class Player : MonoBehaviour
 
             //UiManager.Instance.reroll(diceValues);
 
-            ChangeDiceSprite(diceSprites, dices[1], moveValue);
-            ChangeDiceSprite(diceSprites, dices[1], fireValue);
-            ChangeDiceSprite(diceSprites, dices[1], meleeValue);
+            ChangeDiceSprite(diceSprites, dices[2], moveValue);
+            ChangeDiceSprite(diceSprites, dices[3], fireValue);
+            ChangeDiceSprite(diceSprites, dices[4], meleeValue);
             ChangeDiceSprite(diceSprites, dices[1], healValue);
-            ChangeDiceSprite(diceSprites, dices[1], defendValue);
+            ChangeDiceSprite(diceSprites, dices[0], defendValue);
             
             
         }
@@ -353,6 +353,7 @@ public sealed class Player : MonoBehaviour
     private void Heal()
     {
         health += (int)Mathf.Floor(healValue * 1.5f);
+        UiManager.Instance.updateHealth(health);
         healValue = 0;
         valueIsRolled = false;
         actionTaken = "None";
@@ -376,12 +377,14 @@ public sealed class Player : MonoBehaviour
         if (shieldDurabality <= 0)
         {
             health -= amount;
+            UiManager.Instance.updateHealth(health);
         }
         else
         {
             if (amount >= damageResistanceStrength)
             {
                 health -= amount;
+                UiManager.Instance.updateHealth(health);
             }
             else
             {
