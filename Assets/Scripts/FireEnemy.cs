@@ -21,7 +21,7 @@ public class FireEnemy : Enemies
     {
         RaycastHit2D hit;
 
-        hit = Physics2D.Raycast(raycasts[0].position, Vector3.up, rolledValue);
+        hit = Physics2D.Raycast(raycasts[0].position, Vector3.up, rolledValue - 0.5f);
 
         if (hit)
             if (hit.collider.gameObject.CompareTag("Player"))
@@ -30,7 +30,7 @@ public class FireEnemy : Enemies
                 return true;
             }
 
-        hit = Physics2D.Raycast(raycasts[1].position, Vector3.down, rolledValue);
+        hit = Physics2D.Raycast(raycasts[1].position, Vector3.down, rolledValue - 0.5f);
 
         if (hit)
             if (hit.collider.gameObject.CompareTag("Player"))
@@ -39,7 +39,7 @@ public class FireEnemy : Enemies
                 return true;
             }
 
-        hit = Physics2D.Raycast(raycasts[2].position, Vector3.right, rolledValue);
+        hit = Physics2D.Raycast(raycasts[2].position, Vector3.right, rolledValue - 0.5f);
 
         if (hit)
             if (hit.collider.gameObject.CompareTag("Player"))
@@ -48,7 +48,7 @@ public class FireEnemy : Enemies
                 return true;
             }
 
-        hit = Physics2D.Raycast(raycasts[3].position, Vector3.left, rolledValue);
+        hit = Physics2D.Raycast(raycasts[3].position, Vector3.left, rolledValue - 0.5f);
 
         if (hit)
             if (hit.collider.gameObject.CompareTag("Player"))
