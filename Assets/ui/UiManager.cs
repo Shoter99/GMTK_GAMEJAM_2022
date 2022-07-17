@@ -12,7 +12,9 @@ public class UiManager : MonoBehaviour
     // order of dices: melee, ranged, reposition, heal, defense
     public GameObject[] diceParents = {};
     public int[] diceCounts = new int[5];
-    public Animator[,] diceAnims = new Animator[5,3]; 
+    public Animator[,] diceAnims = new Animator[5,3];
+    public int[] selected = {7,7};
+    public int selectedCount = 6;
 
 
 
@@ -24,20 +26,18 @@ public class UiManager : MonoBehaviour
             for (int j = 0; j < diceCounts[i]; j++)
             {
                 diceAnims[i,j] = diceParents[i].transform.GetChild(j).GetChild(0).gameObject.GetComponent<Animator>();
- 
             }
         }
     }
 
 //reroll takes [5,3] array of numbers to show on dices
-    void reroll(int [,] diceValues){
+    public void reroll(int [,] diceValues){
+        removeSelected();
         for (int i = 0; i < 5; i++)
         {
             for (int j = 0; j < diceCounts[i]; j++)
             {
-                Debug.Log("rerolling dice " + i + " " + j + " dice values" + diceValues[i,j].ToString());
                 diceParents[i].transform.GetChild(j).GetChild(0).GetComponent<Animator>().Play(diceValues[i,j].ToString());
-                //diceAnims[i,j].Play(diceValues[i,j].ToString());   
             }
         }
         for (int i = 0; i < 5; i++)
@@ -50,7 +50,7 @@ public class UiManager : MonoBehaviour
         }
     }
 
-    void add_dice(int diceType)
+    public void add_dice(int diceType)
     {
         diceCounts[diceType]++;
         int diceIndex = diceCounts[diceType] - 1;
@@ -58,15 +58,34 @@ public class UiManager : MonoBehaviour
         newDice.transform.localPosition = new Vector3(0,-100 * diceCounts[diceType],0);
         newDice.transform.localScale = new Vector3(1,1,1);
         diceAnims[diceType,diceIndex] =  newDice.GetComponent<Animator>();
-        //return diceAnims;
 
 
     }
 
-    void Update()
-    {
+    public void receiveClickedAction(GameObject icon){
+        for (int i = 0; i<5; i++){
+            if (icon == diceParents[i]){
+                selected[selectedCount] = i;
+                if (selectedCount == 2){
+                    //here two actions are selected, stored in variable selected as numbers 0-4 respectively with order of which icons are displayed from left to right
+                    selectedCount = 2;
+                }
+                break;
+            }
+            
+        }
+    }
+
+    public void removeSelected(){
+        for(int i = 0; i<5; i++){
+            diceParents[i].GetComponent<clickTriggered>().unclick();
+        }
+
+        selected[0] = 7;
+        selected[1] = 7;
         
     }
+
     void updateHealth()
     {
         if (health <= 0)
