@@ -10,6 +10,7 @@ TagManager:
   - Walls
   - MovePoint
   - Destroyer
+  - Bullet
   layers:
   - Default
   - TransparentFX

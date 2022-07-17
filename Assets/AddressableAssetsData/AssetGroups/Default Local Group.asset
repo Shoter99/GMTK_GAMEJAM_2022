@@ -25,6 +25,10 @@ MonoBehaviour:
     m_Address: Melee
     m_ReadOnly: 0
     m_SerializedLabels: []
+  - m_GUID: 07595233fc13e104a91f28fca213cc1e
+    m_Address: Mine
+    m_ReadOnly: 0
+    m_SerializedLabels: []
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 4b24b81170faf5b408024027c6b7e771, type: 2}
   m_SchemaSet:
