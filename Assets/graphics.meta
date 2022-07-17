@@ -1,5 +1,9 @@
 fileFormatVersion: 2
+<<<<<<< HEAD
 guid: f54d4e2c86e635f4487ea31d0b63587f
+=======
+guid: 1a5a11dfde3456d4e99cba6433c3f327
+>>>>>>> hud
 folderAsset: yes
 DefaultImporter:
   externalObjects: {}
