@@ -128,8 +128,9 @@ public class UiManager : MonoBehaviour
         
     }
 
-    void updateHealth(int health)
+    public void updateHealth(int health)
     {
+
         //unhide all children of hpbar
         for (int i = hpBar.transform.childCount-1; i >=0; i--)
         {  
