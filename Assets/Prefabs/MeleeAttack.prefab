@@ -16,7 +16,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &3433888094041445766
 Transform:
   m_ObjectHideFlags: 0
@@ -144,7 +144,7 @@ GameObject:
   - component: {fileID: -3067474314246063568}
   m_Layer: 0
   m_Name: MeleeAttack
-  m_TagString: Untagged
+  m_TagString: Bullet
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

@@ -8,13 +8,13 @@ public class SpawnEnemy : MonoBehaviour
     private int randEnemy, randNumOfEnemies;
     void Start()
     {
-        randEnemy = Random.Range(0, enemyList.Length);
         randNumOfEnemies = Random.Range(1, 4);
         for (int i = 0; i < randNumOfEnemies; i++)
         {
-            int randXPos = Random.Range(0, 6);
-            int randYPos = Random.Range(0, 6);
-            Instantiate(enemyList[0], new Vector3(transform.position.x + randXPos, transform.position.y + randYPos, 0), Quaternion.identity);
+            randEnemy = Random.Range(0, enemyList.Length);
+            int randXPos = Random.Range(1, 5);
+            int randYPos = Random.Range(1, 5);
+            Instantiate(enemyList[randEnemy], new Vector3(transform.position.x + .5f + randXPos, transform.position.y + .5f + randYPos, 0), Quaternion.identity);
         }
         
     }
