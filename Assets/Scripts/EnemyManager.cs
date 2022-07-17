@@ -132,6 +132,8 @@ public sealed class EnemyManager : MonoBehaviour
                 }
 
                 GameManager.Instance.turn = "Player";
+                Player.Instance.shieldDurability = 0;
+                Player.Instance.damageResistanceStrength = 0;
                 Player.Instance.actionsLeft = 2;
 
                 break;
