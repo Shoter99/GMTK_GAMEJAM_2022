@@ -130,15 +130,16 @@ public class UiManager : MonoBehaviour
 
     void updateHealth(int health)
     {
+        health = 20 - health;
         //unhide all children of hpbar
-        for (int i = hpBar.transform.childCount-1; i >=0; i--)
+        for (int i = 0; i<hpBar.transform.childCount ; i++)
         {  
             Debug.Log(i);
             if (i<health){
-                hpBar.transform.GetChild(i).gameObject.SetActive(false);
+                hpBar.transform.GetChild(i).gameObject.SetActive(true);
             }
             else{
-                hpBar.transform.GetChild(i).gameObject.SetActive(true);
+                hpBar.transform.GetChild(i).gameObject.SetActive(false);
             }
         }
     }
