@@ -16,7 +16,7 @@ public sealed class Player : MonoBehaviour
 
     public bool valueIsRolled = false, bulletExists = false;
 
-
+    public GameObject deathScreen;
     public Sprite[] diceSprites;
     public Image[] dices;
 
@@ -358,7 +358,7 @@ public sealed class Player : MonoBehaviour
     {
         if(health <= 0)
         {
-            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+            deathScreen.SetActive(true);
         }
     }
 
