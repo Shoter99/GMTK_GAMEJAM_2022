@@ -5,14 +5,38 @@ using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
 public sealed class Player : MonoBehaviour
-{
+{      
     public static Player Instance { get; private set; }
+
+    private struct Values
+    {
+        public int moveValue;
+        public int fireValue;
+        public int meleeValue;
+        public int healValue;
+        public int defendValue;
+
+        public void RollNumbers(int minValue, int maxValue)
+        {
+            moveValue = RollAValue(minValue, maxValue);
+            fireValue = RollAValue(minValue, maxValue);
+            meleeValue = RollAValue(minValue, maxValue);
+            healValue = RollAValue(minValue, maxValue);
+            defendValue = RollAValue(minValue, maxValue);
+        }
+
+        private int RollAValue(int minValue, int maxValue) => Random.Range(minValue, maxValue + 1);
+    }
+
+    Values values;
 
     [Range(0, 10)]
     public int health = 10;
-    public int actionsLeft = 1;
-    public int damageResistanceStrength = 0;
-    public int shieldDurabality = 0;
+
+    public int maxActions;
+
+    [HideInInspector]
+    public int actionsLeft = 1, damageResistanceStrength = 0, shieldDurabality = 0;
 
     public bool valueIsRolled = false, bulletExists = false;
 
@@ -26,9 +50,7 @@ public sealed class Player : MonoBehaviour
 
     public int minValue, maxValue;
 
-    public int moveValue, fireValue, meleeValue, healValue, defendValue;
-
-    public Dictionary<string, int> values = new Dictionary<string, int>();
+    //public int moveValue, fireValue, meleeValue, healValue, defendValue;
 
     public string actionTaken = "None";
 
@@ -36,14 +58,15 @@ public sealed class Player : MonoBehaviour
 
     private Transform movePoint;
 
-    public GameObject newBullet;
+    //public GameObject bulletPrefab;
 
-    public GameObject newMelee;
+    //public GameObject meleePrefab;
 
 
 
     private void Awake()
     {
+        actionsLeft = maxActions;
         Instance = this;
         movePoint = transform.GetChild(0).transform;
         movePoint.parent = null;
@@ -51,8 +74,7 @@ public sealed class Player : MonoBehaviour
         for (int i = 0; i < 4; i++)
         {
             raycasts.Add(transform.GetChild(i).transform);
-        }
-        
+        }      
     }
 
     private void Update()
@@ -66,21 +88,17 @@ public sealed class Player : MonoBehaviour
         if (!valueIsRolled)
         {
             valueIsRolled = true;
-            moveValue = RollAValue(minValue, maxValue);
-            fireValue = RollAValue(minValue, maxValue);
-            meleeValue = RollAValue(minValue, maxValue);
-            healValue = RollAValue(minValue, maxValue);
-            defendValue = RollAValue(minValue, maxValue);
+            values.RollNumbers(minValue, maxValue);
             
-            int[,] diceValues = { { meleeValue, 0, 0 }, { fireValue, 0, 0 }, { moveValue, 0, 0 }, { healValue, 0, 0 }, { defendValue, 0, 0 } };
+            //int[,] diceValues = { { values.meleeValue, 0, 0 }, { values.fireValue, 0, 0 }, { values.moveValue, 0, 0 }, { values.healValue, 0, 0 }, { values.defendValue, 0, 0 } };
 
             //UiManager.Instance.reroll(diceValues);
 
-            ChangeDiceSprite(diceSprites, dices[2], moveValue);
-            ChangeDiceSprite(diceSprites, dices[3], fireValue);
-            ChangeDiceSprite(diceSprites, dices[4], meleeValue);
-            ChangeDiceSprite(diceSprites, dices[1], healValue);
-            ChangeDiceSprite(diceSprites, dices[0], defendValue);
+            ChangeDiceSprite(diceSprites, dices[2], values.moveValue);
+            ChangeDiceSprite(diceSprites, dices[3], values.fireValue);
+            ChangeDiceSprite(diceSprites, dices[4], values.meleeValue);
+            ChangeDiceSprite(diceSprites, dices[1], values.healValue);
+            ChangeDiceSprite(diceSprites, dices[0], values.defendValue);
             
             
         }
@@ -111,9 +129,6 @@ public sealed class Player : MonoBehaviour
     }
     private void ChangeDiceSprite(Sprite[] sprite, Image img, int num)
     {
-        print(num);
-        print(sprite);
-        print(img);
         switch(num){
             case 1:
                 img.sprite = sprite[0];
@@ -133,8 +148,6 @@ public sealed class Player : MonoBehaviour
             case 6:
                 img.sprite = sprite[5];
                 break;
-                
-
         }
     }
 
@@ -144,11 +157,9 @@ public sealed class Player : MonoBehaviour
 
         if (Vector3.Distance(transform.position, movePoint.position) == 0f)
         {
-            if (moveValue == 0)
+            if (values.moveValue == 0)
             {
-                valueIsRolled = false;
-                actionsLeft--;
-                actionTaken = "None";
+                PrepereForNextAction();
                 return;
             }
 
@@ -165,13 +176,13 @@ public sealed class Player : MonoBehaviour
                         {
                             if (!hit.collider.CompareTag("Enemy") && !hit.collider.CompareTag("Walls"))
                             {
-                                moveValue--;
+                                values.moveValue--;
                                 movePoint.position += new Vector3(Input.GetAxisRaw("Horizontal"), 0f, 0f);
                             }
                         }
                         else
                         {
-                            moveValue--;
+                            values.moveValue--;
                             movePoint.position += new Vector3(Input.GetAxisRaw("Horizontal"), 0f, 0f);
                         }
                         break;
@@ -182,13 +193,13 @@ public sealed class Player : MonoBehaviour
                         {
                             if (!hit.collider.CompareTag("Enemy") && !hit.collider.CompareTag("Walls"))
                             {
-                                moveValue--;
+                                values.moveValue--;
                                 movePoint.position += new Vector3(Input.GetAxisRaw("Horizontal"), 0f, 0f);
                             }
                         }
                         else
                         {
-                            moveValue--;
+                            values.moveValue--;
                             movePoint.position += new Vector3(Input.GetAxisRaw("Horizontal"), 0f, 0f);
                         }
                         break;
@@ -205,13 +216,13 @@ public sealed class Player : MonoBehaviour
                         {
                             if (!hit.collider.CompareTag("Enemy") && !hit.collider.CompareTag("Walls"))
                             {
-                                moveValue--;
+                                values.moveValue--;
                                 movePoint.position += new Vector3(0f, Input.GetAxisRaw("Vertical"), 0f);
                             }
                         }
                         else
                         {
-                            moveValue--;
+                            values.moveValue--;
                             movePoint.position += new Vector3(0f, Input.GetAxisRaw("Vertical"), 0f);
                         }
                         break;
@@ -222,13 +233,13 @@ public sealed class Player : MonoBehaviour
                         {
                             if (!hit.collider.CompareTag("Enemy") && !hit.collider.CompareTag("Walls"))
                             {
-                                moveValue--;
+                                values.moveValue--;
                                 movePoint.position += new Vector3(0f, Input.GetAxisRaw("Vertical"), 0f);
                             }
                         }
                         else
                         {
-                            moveValue--;
+                            values.moveValue--;
                             movePoint.position += new Vector3(0f, Input.GetAxisRaw("Vertical"), 0f);
                         }
                         break;
@@ -241,62 +252,84 @@ public sealed class Player : MonoBehaviour
     {
         if (Input.GetAxisRaw("Horizontal") == 1f)
         {
-            GameObject bullet = Instantiate(newBullet, transform.position, Quaternion.identity);
-            bullet.GetComponent<BulletScript>().direction = "Right";
-            bullet.GetComponent<BulletScript>().strength = fireValue;
-            bullet.GetComponent<BulletScript>().owner = gameObject;
-            actionTaken = "None";
-            fireValue = 0;
-            valueIsRolled = false;
+            SpawnBullet().GetComponent<BulletScript>().direction = "Right";
             bulletExists = true;
-            actionsLeft--;
+            PrepereForNextAction();
         }
 
         if (Input.GetAxisRaw("Horizontal") == -1f)
         {
-            GameObject bullet = Instantiate(newBullet, transform.position, Quaternion.identity);
-            bullet.GetComponent<BulletScript>().direction = "Left";
-            bullet.GetComponent<BulletScript>().strength = fireValue;
-            bullet.GetComponent<BulletScript>().owner = gameObject;
-            actionTaken = "None";
-            fireValue = 0;
-            valueIsRolled = false;
+            SpawnBullet().GetComponent<BulletScript>().direction = "Left";
             bulletExists = true;
-            actionsLeft--;
+            PrepereForNextAction();
         }
 
         if (Input.GetAxisRaw("Vertical") == 1f)
         {
-            GameObject bullet = Instantiate(newBullet, transform.position, Quaternion.identity);
-            bullet.GetComponent<BulletScript>().direction = "Up";
-            bullet.GetComponent<BulletScript>().strength = fireValue;
-            bullet.GetComponent<BulletScript>().owner = gameObject;
-            actionTaken = "None";
-            fireValue = 0;
-            valueIsRolled = false;
+            SpawnBullet().GetComponent<BulletScript>().direction = "Up";
             bulletExists = true;
-            actionsLeft--;
+            PrepereForNextAction();
         }
 
         if (Input.GetAxisRaw("Vertical") == -1f)
         {
-            GameObject bullet = Instantiate(newBullet, transform.position, Quaternion.identity);
-            bullet.GetComponent<BulletScript>().direction = "Down";
-            bullet.GetComponent<BulletScript>().strength = fireValue;
-            bullet.GetComponent<BulletScript>().owner = gameObject;
-            actionTaken = "None";
-            fireValue = 0;
-            valueIsRolled = false;
+            SpawnBullet().GetComponent<BulletScript>().direction = "Down";
             bulletExists = true;
-            actionsLeft--;
+            PrepereForNextAction();
         }
+    }
+
+    private GameObject SpawnBullet ()
+    {
+        //GameObject bullet = Instantiate(bulletPrefab, transform.position, Quaternion.identity);
+        GameObject bullet = Instantiate(Addressables.LoadAssetAsync<GameObject>("Bullet").WaitForCompletion(), transform.position, Quaternion.identity);
+        bullet.GetComponent<BulletScript>().strength = values.fireValue;
+        bullet.GetComponent<BulletScript>().owner = gameObject;
+        return bullet;
     }
 
     private void MeleeAttack()
     {
+
+        if (Mathf.Abs(Input.GetAxisRaw("Horizontal")) == 1f)
+        {
+            switch (Input.GetAxisRaw("Horizontal"))
+            {
+                case 1f:
+                    SpawnMelee().GetComponent<BulletScript>().direction = "Right";
+                    break;
+                case -1f:
+                    SpawnMelee().GetComponent<BulletScript>().direction = "Left";
+                    break;
+            }
+
+            bulletExists = true;
+            PrepereForNextAction();
+        }
+
+        if (Mathf.Abs(Input.GetAxisRaw("Vertical")) == 1f)
+        {
+            switch (Input.GetAxisRaw("Vertical"))
+            {
+                case 1f:
+                    SpawnMelee().GetComponent<BulletScript>().direction = "Up";
+                    break;
+                case -1f:
+                    SpawnMelee().GetComponent<BulletScript>().direction = "Down";
+                    break;
+            }
+
+            bulletExists = true;
+            PrepereForNextAction();
+        }
+
+    }
+
+    private GameObject SpawnMelee()
+    {
         int range;
 
-        if (meleeValue >= 5)
+        if (values.meleeValue >= 5)
         {
             range = 2;
         }
@@ -305,84 +338,44 @@ public sealed class Player : MonoBehaviour
             range = 1;
         }
 
-        if (Mathf.Abs(Input.GetAxisRaw("Horizontal")) == 1f)
-        {
-            GameObject melee = Instantiate(newMelee, transform.position, Quaternion.identity);
-            melee.GetComponent<BulletScript>().strength = meleeValue * 2;
-            melee.GetComponent<BulletScript>().length = range;
-            melee.GetComponent<BulletScript>().owner = gameObject;
-
-            switch (Input.GetAxisRaw("Horizontal"))
-            {
-                case 1f:
-                    melee.GetComponent<BulletScript>().direction = "Right";
-                    break;
-                case -1f:
-                    melee.GetComponent<BulletScript>().direction = "Left";
-                    break;
-            }
-
-            bulletExists = true;
-            meleeValue = 0;
-            valueIsRolled = false;
-            actionTaken = "None";
-            actionsLeft--;
-        }
-
-        if (Mathf.Abs(Input.GetAxisRaw("Vertical")) == 1f)
-        {
-            GameObject melee = Instantiate(newMelee, transform.position, Quaternion.identity);
-            melee.GetComponent<BulletScript>().strength = meleeValue * 2;
-            melee.GetComponent<BulletScript>().length = range;
-            melee.GetComponent<BulletScript>().owner = gameObject;
-
-            switch (Input.GetAxisRaw("Vertical"))
-            {
-                case 1f:
-                    melee.GetComponent<BulletScript>().direction = "Up";
-                    break;
-                case -1f:
-                    melee.GetComponent<BulletScript>().direction = "Down";
-                    break;
-            }
-
-            bulletExists = true;
-            meleeValue = 0;
-            valueIsRolled = false;
-            actionTaken = "None";
-            actionsLeft--;
-        }
-
-    }
-    private void LateUpdate()
-    {
-        if(health <= 0)
-        {
-            deathScreen.SetActive(true);
-        }
+        //GameObject melee = Instantiate(meleePrefab, transform.position, Quaternion.identity);
+        GameObject melee = Instantiate(Addressables.LoadAssetAsync<GameObject>("Melee").WaitForCompletion(), transform.position, Quaternion.identity);
+        melee.GetComponent<BulletScript>().strength = values.meleeValue * 2;
+        melee.GetComponent<BulletScript>().length = range;
+        melee.GetComponent<BulletScript>().owner = gameObject;
+        return melee;
     }
 
     private void Heal()
     {
-        health += healValue;
+        health += values.healValue;
         UiManager.Instance.updateHealth(health);
-        healValue = 0;
-        valueIsRolled = false;
-        actionTaken = "None";
-        actionsLeft--;
+        PrepereForNextAction();
     }
     
     private void Defend()
     {
         shieldDurabality = 2;
-        damageResistanceStrength = defendValue;
-        actionTaken = "None";
-        actionsLeft--;
-        defendValue = 0;
-        valueIsRolled = false;
+        damageResistanceStrength = values.defendValue;
+        PrepereForNextAction();
     }
 
-    public int RollAValue(int minValue, int maxValue) => Random.Range(minValue, maxValue + 1);
+    private void PrepereForNextAction()
+    {
+        values = default;
+        valueIsRolled = false;
+        actionTaken = "None";
+        actionsLeft--;
+    }
+
+    private void LateUpdate()
+    {
+        Debug.Log(values.moveValue);
+        if (health <= 0)
+        {
+            deathScreen.SetActive(true);
+        }
+    }
 
     public void TakeDamage(int amount)
     {

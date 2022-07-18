@@ -138,7 +138,7 @@ public sealed class EnemyManager : MonoBehaviour
                     }
 
                     GameManager.Instance.turn = "Player";
-                    Player.Instance.actionsLeft = 1;
+                    Player.Instance.actionsLeft = Player.Instance.maxActions;
 
                     break;
 
