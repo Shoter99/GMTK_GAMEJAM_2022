@@ -30,29 +30,27 @@ public sealed class Player : MonoBehaviour
 
     Values values;
 
-    [Range(0, 10)]
-    public int health = 10;
+    [Range(0, 20)]
+    public int health = 15;
+
+    [SerializeField]
+    private float moveSpeed = 1f;
 
     public int maxActions;
 
-    [HideInInspector]
-    public int actionsLeft = 1, damageResistanceStrength = 0, shieldDurabality = 0;
+    public int minValue, maxValue;
 
-    public bool valueIsRolled = false, bulletExists = false;
+    public string actionTaken = "None";
 
     public GameObject deathScreen;
     public Sprite[] diceSprites;
     public Image[] dices;
 
-    [SerializeField]
-    [Range(0, 20)]
-    private float moveSpeed = 1f;
+    [HideInInspector]
+    public int actionsLeft, damageResistanceStrength = 0, shieldDurabality = 0;
 
-    public int minValue, maxValue;
-
-    //public int moveValue, fireValue, meleeValue, healValue, defendValue;
-
-    public string actionTaken = "None";
+    [HideInInspector]
+    public bool valueIsRolled = false, bulletExists = false;
 
     private readonly List<Transform> raycasts = new List<Transform>();
 
@@ -66,8 +64,8 @@ public sealed class Player : MonoBehaviour
 
     private void Awake()
     {
-        actionsLeft = maxActions;
         Instance = this;
+        actionsLeft = maxActions;
         movePoint = transform.GetChild(0).transform;
         movePoint.parent = null;
 
@@ -77,12 +75,17 @@ public sealed class Player : MonoBehaviour
         }      
     }
 
+    private void LateUpdate()
+    {
+        if (health <= 0)
+        {
+            deathScreen.SetActive(true);
+        }
+    }
+
     private void Update()
     {
-        if (GameManager.Instance.turn == "Enemies")
-            return;
-
-        if (bulletExists)
+        if (GameManager.Instance.turn == "Enemies" || bulletExists)
             return;
 
         if (!valueIsRolled)
@@ -98,9 +101,7 @@ public sealed class Player : MonoBehaviour
             ChangeDiceSprite(diceSprites, dices[3], values.fireValue);
             ChangeDiceSprite(diceSprites, dices[4], values.meleeValue);
             ChangeDiceSprite(diceSprites, dices[1], values.healValue);
-            ChangeDiceSprite(diceSprites, dices[0], values.defendValue);
-            
-            
+            ChangeDiceSprite(diceSprites, dices[0], values.defendValue);      
         }
 
         switch (actionTaken)
@@ -366,15 +367,6 @@ public sealed class Player : MonoBehaviour
         valueIsRolled = false;
         actionTaken = "None";
         actionsLeft--;
-    }
-
-    private void LateUpdate()
-    {
-        Debug.Log(values.moveValue);
-        if (health <= 0)
-        {
-            deathScreen.SetActive(true);
-        }
     }
 
     public void TakeDamage(int amount)

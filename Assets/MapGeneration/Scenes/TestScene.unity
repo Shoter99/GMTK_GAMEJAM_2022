@@ -256,6 +256,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 689882722332765687, guid: d21d3d1417086c443a116c3b3668257f, type: 3}
+      propertyPath: maxActions
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 689882722332765687, guid: d21d3d1417086c443a116c3b3668257f, type: 3}
       propertyPath: actionTaken
       value: None
       objectReference: {fileID: 0}
