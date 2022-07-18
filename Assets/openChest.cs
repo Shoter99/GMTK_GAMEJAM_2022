@@ -8,7 +8,7 @@ public class openChest : MonoBehaviour
     {
         if (collision.CompareTag("Player"))
         {
-            SceneManager.LoadScene("CoreditScene");
+            SceneManager.LoadScene("CreditScene");
         }
     }
 }
